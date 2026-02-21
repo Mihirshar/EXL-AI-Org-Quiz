@@ -101,7 +101,7 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, onReset, 
               transition={{ delay: 0.3 }}
             >
               <p className="font-mono text-[9px] text-white/40 uppercase tracking-wider mb-2">Your Scorecard</p>
-              <div className="grid grid-cols-4 gap-2">
+              <div className="grid grid-cols-4 gap-3">
                 {SCORE_METRICS.map((metric, index) => (
                   <ScoreMeter
                     key={metric.key}

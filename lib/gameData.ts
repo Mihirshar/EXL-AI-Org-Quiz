@@ -284,7 +284,7 @@ export function calculateScores(choices: ('A' | 'B')[]): Scores {
 export function isScorePassing(key: ScoreKey, value: number): boolean {
   switch (key) {
     case 'TV':
-      return value > 35;
+      return value >= 35;
     case 'OR':
       return value < 40;
     case 'IV':
@@ -298,7 +298,7 @@ export function isScorePassing(key: ScoreKey, value: number): boolean {
 export function isNearTarget(key: ScoreKey, value: number): boolean {
   switch (key) {
     case 'TV':
-      return value >= 25 && value <= 35;
+      return value >= 25 && value < 35;
     case 'OR':
       return value >= 40 && value <= 50;
     case 'IV':

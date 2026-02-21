@@ -62,20 +62,20 @@ export default function ScoreMeter({
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay, duration: 0.4 }}
-        className={`rounded-lg p-3 border ${config.bg} ${config.border}`}
+        className={`rounded-lg p-3 border ${config.bg} ${config.border} overflow-hidden`}
       >
         {/* Header */}
-        <div className="flex items-center justify-between mb-2">
-          <div className="flex items-center gap-1.5">
-            <span className={`font-mono text-xs font-bold ${config.text}`}>{scoreKey}</span>
-            <span className="text-white/20 text-xs">|</span>
+        <div className="flex items-center justify-between mb-2 gap-2">
+          <div className="flex items-center gap-1.5 min-w-0">
+            <span className={`font-mono text-xs font-bold ${config.text} flex-shrink-0`}>{scoreKey}</span>
+            <span className="text-white/20 text-xs flex-shrink-0">|</span>
             <span className="text-[10px] text-white/50 truncate">{label}</span>
           </div>
           <motion.span
             initial={{ opacity: 0, scale: 0 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: delay + 0.3, type: 'spring' }}
-            className={`text-[10px] font-mono px-1.5 py-0.5 rounded ${config.bg} ${config.text} border ${config.border}`}
+            className={`text-[9px] font-mono px-1.5 py-0.5 rounded ${config.bg} ${config.text} border ${config.border} flex-shrink-0`}
           >
             {config.label}
           </motion.span>
