@@ -44,39 +44,49 @@ export default function MonthTimeline({ currentLevel, completedLevels, isComplet
   const isDecisionMonth = (month: number) => decisionMonths.includes(month as typeof decisionMonths[number]);
   const getDecisionIndex = (month: number) => decisionMonths.indexOf(month as typeof decisionMonths[number]);
 
+  const LABEL_WIDTH = 56; // "MONTHS" label width in pixels
+
   return (
     <div className="relative px-2">
-      {/* Month numbers */}
-      <div className="relative h-5 mb-1">
-        {months.map((month) => {
-          const leftPercent = ((month - 1) / 11) * 100;
-          const status = getMonthStatus(month);
-          const isDecision = isDecisionMonth(month);
-          
-          return (
-            <div
-              key={month}
-              className="absolute -translate-x-1/2"
-              style={{ left: `${leftPercent}%` }}
-            >
-              <span
-                className={`
-                  text-xs font-mono transition-all duration-300
-                  ${isDecision ? 'font-bold text-sm' : 'opacity-60 text-[10px]'}
-                  ${status === 'completed' ? 'text-green-400' : ''}
-                  ${status === 'current' ? 'text-exl-orange' : ''}
-                  ${status === 'pending' ? 'text-white/40' : ''}
-                `}
+      {/* "Months" label + Month numbers */}
+      <div className="relative h-5 mb-1 flex items-center">
+        <span 
+          className="text-[10px] font-mono text-white/50 uppercase tracking-wider flex-shrink-0"
+          style={{ width: `${LABEL_WIDTH}px` }}
+        >
+          Months
+        </span>
+        <div className="relative flex-1 h-full">
+          {months.map((month) => {
+            const leftPercent = ((month - 1) / 11) * 100;
+            const status = getMonthStatus(month);
+            const isDecision = isDecisionMonth(month);
+            
+            return (
+              <div
+                key={month}
+                className="absolute -translate-x-1/2"
+                style={{ left: `${leftPercent}%` }}
               >
-                {month}
-              </span>
-            </div>
-          );
-        })}
+                <span
+                  className={`
+                    text-xs font-mono transition-all duration-300
+                    ${isDecision ? 'font-bold text-sm' : 'opacity-60 text-[10px]'}
+                    ${status === 'completed' ? 'text-green-400' : ''}
+                    ${status === 'current' ? 'text-exl-orange' : ''}
+                    ${status === 'pending' ? 'text-white/40' : ''}
+                  `}
+                >
+                  {month}
+                </span>
+              </div>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Timeline track */}
-      <div className="relative h-6 flex items-center">
+      {/* Timeline track - aligned with month numbers */}
+      <div className="relative h-6 flex items-center" style={{ marginLeft: `${LABEL_WIDTH}px` }}>
         {/* Background track */}
         <div className="absolute inset-x-0 h-1.5 bg-surface/80 rounded-full" />
         
@@ -134,8 +144,8 @@ export default function MonthTimeline({ currentLevel, completedLevels, isComplet
         })}
       </div>
 
-      {/* Current decision label */}
-      <div className="relative h-5 mt-1">
+      {/* Current decision label - aligned with timeline */}
+      <div className="relative h-5 mt-1" style={{ marginLeft: `${LABEL_WIDTH}px` }}>
         {decisionMonths.map((month, index) => {
           const status = getMonthStatus(month);
           const leftPercent = ((month - 1) / 11) * 100;

@@ -9,6 +9,19 @@ interface IntroScreenProps {
 }
 
 export default function IntroScreen({ onStart }: IntroScreenProps) {
+  const formatTarget = (target: string) => {
+    const trimmed = target.trim();
+    if (trimmed.startsWith('>')) {
+      const value = trimmed.replace(/[>+]/g, '').trim();
+      return `More than ${value}`;
+    }
+    if (trimmed.startsWith('<')) {
+      const value = trimmed.replace(/[<+]/g, '').trim();
+      return `Less than ${value}`;
+    }
+    return trimmed.replace('+', '').trim();
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -100,7 +113,7 @@ export default function IntroScreen({ onStart }: IntroScreenProps) {
               <div className="flex items-center gap-2">
                 <span className="text-xs font-mono text-white/30">Target:</span>
                 <span className={`text-xs font-mono font-semibold ${metric.isLimit ? 'text-failure' : 'text-success'}`}>
-                  {metric.target}
+                  {formatTarget(metric.target)}
                 </span>
               </div>
             </div>

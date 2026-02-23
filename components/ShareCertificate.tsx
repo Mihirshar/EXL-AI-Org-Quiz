@@ -30,9 +30,11 @@ export default function ShareCertificate({
     try {
       const html2canvas = (await import('html2canvas')).default;
       const canvas = await html2canvas(certificateRef.current, {
-        scale: 2,
-        backgroundColor: '#0A0A0F',
-        logging: false,
+        scale: 3,
+        backgroundColor: '#FFFFFF',
+        logging: true,
+        useCORS: true,
+        allowTaint: true,
       });
       
       const link = document.createElement('a');
@@ -83,47 +85,98 @@ export default function ShareCertificate({
         animate={{ scale: 1, y: 0 }}
         exit={{ scale: 0.9, y: 20 }}
         onClick={(e) => e.stopPropagation()}
-        className="max-w-2xl w-full"
+        style={{ width: '100%', maxWidth: '640px' }}
       >
-        {/* Certificate */}
+        {/* Certificate - 5x8 inch ratio (8:5 = 1.6) - ALL INLINE STYLES for html2canvas */}
         <div
           ref={certificateRef}
-          className="bg-gradient-to-br from-[#0A0A0F] via-[#111118] to-[#0A0A0F] rounded-2xl border-2 border-exl-orange/30 p-8 relative overflow-hidden"
+          style={{ 
+            position: 'relative',
+            width: '100%',
+            aspectRatio: '8 / 5',
+            backgroundColor: '#FFFFFF',
+            borderRadius: '12px',
+            overflow: 'hidden',
+            fontFamily: 'system-ui, -apple-system, sans-serif',
+          }}
         >
-          {/* Decorative Elements */}
-          <div className="absolute top-0 left-0 w-32 h-32 bg-exl-orange/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-0 w-40 h-40 bg-exl-orange/5 rounded-full blur-3xl" />
+          {/* Orange border frame */}
+          <div 
+            style={{ 
+              position: 'absolute',
+              top: '12px',
+              left: '12px',
+              right: '12px',
+              bottom: '12px',
+              border: '2px solid #F26522',
+              borderRadius: '8px',
+              pointerEvents: 'none',
+            }}
+          />
           
-          {/* Corner Decorations */}
-          <div className="absolute top-4 left-4 w-8 h-8 border-l-2 border-t-2 border-exl-orange/40" />
-          <div className="absolute top-4 right-4 w-8 h-8 border-r-2 border-t-2 border-exl-orange/40" />
-          <div className="absolute bottom-4 left-4 w-8 h-8 border-l-2 border-b-2 border-exl-orange/40" />
-          <div className="absolute bottom-4 right-4 w-8 h-8 border-r-2 border-b-2 border-exl-orange/40" />
+          {/* Corner accents */}
+          <div style={{ position: 'absolute', top: '20px', left: '20px', width: '24px', height: '24px', borderTop: '3px solid #F26522', borderLeft: '3px solid #F26522' }} />
+          <div style={{ position: 'absolute', top: '20px', right: '20px', width: '24px', height: '24px', borderTop: '3px solid #F26522', borderRight: '3px solid #F26522' }} />
+          <div style={{ position: 'absolute', bottom: '20px', left: '20px', width: '24px', height: '24px', borderBottom: '3px solid #F26522', borderLeft: '3px solid #F26522' }} />
+          <div style={{ position: 'absolute', bottom: '20px', right: '20px', width: '24px', height: '24px', borderBottom: '3px solid #F26522', borderRight: '3px solid #F26522' }} />
 
-          <div className="relative z-10">
+          {/* Content */}
+          <div style={{ 
+            position: 'relative', 
+            zIndex: 10, 
+            height: '100%', 
+            display: 'flex', 
+            flexDirection: 'column', 
+            padding: '24px 48px',
+          }}>
             {/* Header */}
-            <div className="text-center mb-6">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <span className="text-exl-orange font-bold text-2xl tracking-tight">EXL</span>
-                <span className="text-white/30">|</span>
-                <span className="text-white/60 text-sm">AI Strategy Simulation</span>
+            <div style={{ textAlign: 'center', marginBottom: '16px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '4px' }}>
+                <span style={{ color: '#F26522', fontWeight: 700, fontSize: '28px', letterSpacing: '-0.02em' }}>EXL</span>
+                <span style={{ color: '#D1D5DB' }}>|</span>
+                <span style={{ color: '#6B7280', fontSize: '14px' }}>AI Strategy Simulation</span>
               </div>
-              <h2 className="text-xs font-mono text-white/40 uppercase tracking-[0.3em]">
+              <div style={{ 
+                fontSize: '11px', 
+                fontFamily: 'monospace', 
+                color: '#9CA3AF', 
+                textTransform: 'uppercase', 
+                letterSpacing: '0.25em' 
+              }}>
                 Certificate of Completion
-              </h2>
+              </div>
             </div>
 
-            {/* Main Content */}
-            <div className="flex items-center gap-6 mb-6">
+            {/* Main Content Row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
               {/* Avatar */}
-              <div className="flex-shrink-0">
+              <div style={{ flexShrink: 0 }}>
                 {avatarUrl ? (
-                  <div className="w-24 h-24 rounded-full border-4 border-exl-orange/50 overflow-hidden shadow-[0_0_30px_rgba(242,101,34,0.3)]">
-                    <img src={avatarUrl} alt={playerName} className="w-full h-full object-cover" />
+                  <div 
+                    style={{ 
+                      width: '70px', 
+                      height: '70px', 
+                      borderRadius: '50%', 
+                      border: '3px solid #F26522',
+                      overflow: 'hidden',
+                    }}
+                  >
+                    <img src={avatarUrl} alt={playerName} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   </div>
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-exl-orange/20 flex items-center justify-center border-4 border-exl-orange/50">
-                    <span className="text-4xl font-bold text-exl-orange">
+                  <div 
+                    style={{ 
+                      width: '70px', 
+                      height: '70px', 
+                      borderRadius: '50%', 
+                      backgroundColor: 'rgba(242, 101, 34, 0.15)',
+                      border: '3px solid #F26522',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <span style={{ fontSize: '28px', fontWeight: 700, color: '#F26522' }}>
                       {playerName.charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -131,58 +184,104 @@ export default function ShareCertificate({
               </div>
 
               {/* Info */}
-              <div className="flex-1">
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-1">This certifies that</p>
-                <h3 className="text-2xl font-bold text-white mb-2">{playerName}</h3>
-                <p className="text-white/60 text-sm">
+              <div style={{ flex: 1 }}>
+                <div style={{ color: '#9CA3AF', fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '2px' }}>
+                  This certifies that
+                </div>
+                <div style={{ fontSize: '22px', fontWeight: 700, color: '#111827', marginBottom: '4px' }}>
+                  {playerName}
+                </div>
+                <div style={{ color: '#6B7280', fontSize: '12px', lineHeight: 1.4 }}>
                   has successfully completed the AI Org Board Challenge
                   <br />
                   on {formatDate()}
-                </p>
-              </div>
-            </div>
-
-            {/* Archetype */}
-            <div className="bg-surface/50 rounded-xl p-4 mb-4 border border-border">
-              <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Leadership Archetype</p>
-              <div className="flex items-center gap-3">
-                <span className="text-4xl">{archetype.icon}</span>
-                <div>
-                  <h4 className="text-xl font-bold" style={{ color: archetype.color }}>
-                    {archetype.name}
-                  </h4>
-                  <p className="text-white/50 text-sm">{archetype.subtitle}</p>
                 </div>
               </div>
             </div>
 
-            {/* Scores */}
-            <div className="grid grid-cols-4 gap-2 mb-4">
+            {/* Archetype Box */}
+            <div 
+              style={{ 
+                backgroundColor: '#F9FAFB', 
+                borderRadius: '10px', 
+                padding: '10px 14px',
+                border: '1px solid #E5E7EB',
+                marginBottom: '12px',
+              }}
+            >
+              <div style={{ color: '#9CA3AF', fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                Leadership Archetype
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '26px' }}>{archetype.icon}</span>
+                <div>
+                  <div style={{ fontSize: '16px', fontWeight: 700, color: archetype.color }}>
+                    {archetype.name}
+                  </div>
+                  <div style={{ color: '#6B7280', fontSize: '10px' }}>{archetype.subtitle}</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Scores Grid */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '12px' }}>
               {SCORE_METRICS.map((metric) => (
-                <div key={metric.key} className="bg-surface/30 rounded-lg p-2 text-center">
-                  <p className="text-exl-orange font-mono text-xs font-bold">{metric.key}</p>
-                  <p className="text-white font-bold">
+                <div 
+                  key={metric.key} 
+                  style={{ 
+                    flex: 1,
+                    backgroundColor: '#F9FAFB', 
+                    borderRadius: '8px', 
+                    padding: '6px 4px',
+                    border: '1px solid #E5E7EB',
+                    textAlign: 'center',
+                  }}
+                >
+                  <div style={{ color: '#F26522', fontFamily: 'monospace', fontSize: '10px', fontWeight: 700 }}>
+                    {metric.key}
+                  </div>
+                  <div style={{ color: '#111827', fontSize: '14px', fontWeight: 700 }}>
                     {scores[metric.key] > 0 ? '+' : ''}{scores[metric.key]}
-                  </p>
+                  </div>
                 </div>
               ))}
             </div>
 
             {/* Status Badge */}
-            <div className="text-center">
+            <div style={{ textAlign: 'center', marginTop: 'auto' }}>
               {isWinner ? (
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/20 border border-green-500/30">
-                  <span className="text-green-400 text-lg">✓</span>
-                  <span className="text-green-400 font-bold text-sm">
+                <span 
+                  style={{ 
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: 'rgba(34, 197, 94, 0.15)', 
+                    border: '1px solid rgba(34, 197, 94, 0.3)',
+                    borderRadius: '20px',
+                    padding: '6px 16px',
+                  }}
+                >
+                  <span style={{ color: '#16A34A', fontSize: '14px' }}>✓</span>
+                  <span style={{ color: '#16A34A', fontWeight: 600, fontSize: '12px' }}>
                     Transformation Target Achieved
                   </span>
-                </div>
+                </span>
               ) : (
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                  <span className="text-white/60 text-sm">
+                <span 
+                  style={{ 
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    backgroundColor: '#F3F4F6', 
+                    border: '1px solid #E5E7EB',
+                    borderRadius: '20px',
+                    padding: '6px 16px',
+                  }}
+                >
+                  <span style={{ color: '#6B7280', fontSize: '12px' }}>
                     Strategy Simulation Completed
                   </span>
-                </div>
+                </span>
               )}
             </div>
           </div>
