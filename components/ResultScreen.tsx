@@ -260,6 +260,7 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, onReset, 
         {showCertificate && (
           <ShareCertificate
             playerName={currentPlayer?.name || 'Strategist'}
+            playerLevel={currentPlayer?.level}
             archetype={archetype}
             scores={scores}
             isWinner={isWinner}

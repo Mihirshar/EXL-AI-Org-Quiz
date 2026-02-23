@@ -7,6 +7,7 @@ import { Scores, SCORE_METRICS } from '@/lib/gameData';
 
 interface ShareCertificateProps {
   playerName: string;
+  playerLevel?: string;
   archetype: Archetype;
   scores: Scores;
   isWinner: boolean;
@@ -16,6 +17,7 @@ interface ShareCertificateProps {
 
 export default function ShareCertificate({
   playerName,
+  playerLevel,
   archetype,
   scores,
   isWinner,
@@ -139,11 +141,12 @@ export default function ShareCertificate({
               <div style={{ 
                 fontSize: '11px', 
                 fontFamily: 'monospace', 
-                color: '#9CA3AF', 
+                color: '#F26522', 
                 textTransform: 'uppercase', 
-                letterSpacing: '0.25em' 
+                letterSpacing: '0.2em',
+                fontWeight: 600,
               }}>
-                Certificate of Completion
+                {playerLevel || 'Participant'}
               </div>
             </div>
 
@@ -192,7 +195,7 @@ export default function ShareCertificate({
                   {playerName}
                 </div>
                 <div style={{ color: '#6B7280', fontSize: '12px', lineHeight: 1.4 }}>
-                  has successfully completed the AI Org Board Challenge
+                  has successfully completed the AI Strategy Simulation Exercise
                   <br />
                   on {formatDate()}
                 </div>
