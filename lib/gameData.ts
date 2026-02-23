@@ -48,8 +48,8 @@ export interface Level {
   month: string;
   scenario: string;
   choices: {
-    A: string;
-    B: string;
+    A: string[];  // Array of 5 variants for Option A
+    B: string[];  // Array of 5 variants for Option B
   };
   scoring: {
     A: ScoreChange;
@@ -86,8 +86,20 @@ export const LEVELS: Level[] = [
     month: 'Month 1',
     scenario: `Gartner data reveals that most AI initiatives fail because organizations treat AI as a plug-and-play technology rather than a cultural shift. You have a $10M budget to kickstart your 12-month turnaround. How do you allocate it?`,
     choices: {
-      A: 'Invest 90% of the budget in enterprise AI licenses to maximize immediate technological capabilities, leaving 10% for basic software training.',
-      B: 'Split the budget 50/50—funding AI tools alongside a massive "AI Literacy and Context Engineering" upskilling program.',
+      A: [
+        'Invest 90% of the budget in enterprise AI licenses to maximize immediate technological capabilities, leaving 10% for basic software training.',
+        'Allocate the vast majority of funds to acquiring cutting-edge AI platforms immediately, with minimal investment in workforce preparation.',
+        'Prioritize rapid technology acquisition—pour resources into best-in-class AI tools now and address training gaps later.',
+        'Fast-track AI deployment by channeling 90% of capital into enterprise licenses, treating training as a secondary concern.',
+        'Maximize technological firepower upfront: secure comprehensive AI licensing while keeping upskilling investment minimal.',
+      ],
+      B: [
+        'Split the budget 50/50—funding AI tools alongside a massive "AI Literacy and Context Engineering" upskilling program.',
+        'Balance technology and people equally: invest half in AI platforms and half in building workforce AI fluency.',
+        'Pursue a dual-track strategy—equal investment in tools and a comprehensive "AI Readiness" training initiative.',
+        'Adopt a human-centered approach: match every dollar spent on AI tools with equivalent investment in employee upskilling.',
+        'Build capabilities alongside technology: allocate equal resources to AI platforms and workforce transformation programs.',
+      ],
     },
     scoring: {
       A: { IV: 20, OR: 15, HR: -20, TV: -5 },
@@ -122,8 +134,20 @@ export const LEVELS: Level[] = [
     month: 'Month 4',
     scenario: `Operations wants to deploy Generative AI to handle complex, highly regulated client data (e.g., claims processing, underwriting). Generic models hallucinate; Everest Group emphasizes the need for Domain-Specific Language Models (DSLMs).`,
     choices: {
-      A: 'Deploy a generic, off-the-shelf LLM wrapper for a fast, cheap rollout to hit immediate quarterly targets.',
-      B: 'Delay 60 days to fine-tune a Domain-Specific Language Model (DSLM) trained on proprietary enterprise data with robust RAG architecture.',
+      A: [
+        'Deploy a generic, off-the-shelf LLM wrapper for a fast, cheap rollout to hit immediate quarterly targets.',
+        'Launch quickly with a standard large language model—speed to market matters more than customization right now.',
+        'Go with a ready-made AI solution to demonstrate rapid progress and satisfy short-term performance expectations.',
+        'Opt for immediate deployment using an out-of-the-box LLM to show quick wins and meet this quarter\'s goals.',
+        'Prioritize velocity: implement a generic AI model now to capture early mover advantage in the market.',
+      ],
+      B: [
+        'Delay 60 days to fine-tune a Domain-Specific Language Model (DSLM) trained on proprietary enterprise data with robust RAG architecture.',
+        'Invest two months in building a customized AI model trained specifically on your industry\'s regulatory requirements and internal data.',
+        'Take time to develop a precision-tuned model with retrieval-augmented generation for accurate, compliant outputs.',
+        'Accept a short-term delay to create a specialized AI system that truly understands your domain\'s complexity and compliance needs.',
+        'Build it right: dedicate 60 days to training a model on proprietary data with enterprise-grade accuracy safeguards.',
+      ],
     },
     scoring: {
       A: { IV: 25, OR: 30, HR: -10, TV: 0 },
@@ -158,8 +182,20 @@ export const LEVELS: Level[] = [
     month: 'Month 7',
     scenario: `You've built capable AI tools, but productivity gains are capped at 10-15%. Gartner's research indicates that true step-change value comes from autonomous AI agents capable of multi-step reasoning without human intervention.`,
     choices: {
-      A: 'Continue scaling human-supervised Copilots, keeping humans firmly in the loop for every task.',
-      B: 'Deploy an autonomous Multiagent System to negotiate and resolve tier-1 and tier-2 B2B disputes completely without human intervention.',
+      A: [
+        'Continue scaling human-supervised Copilots, keeping humans firmly in the loop for every task.',
+        'Stay the course with AI assistants that require human approval at each step—safety and control remain paramount.',
+        'Expand the current copilot model where employees guide and verify every AI action before execution.',
+        'Maintain human oversight: scale AI tools that augment workers but never act independently.',
+        'Stick with the proven approach: AI suggests, humans decide and execute on every workflow.',
+      ],
+      B: [
+        'Deploy an autonomous Multiagent System to negotiate and resolve tier-1 and tier-2 B2B disputes completely without human intervention.',
+        'Unleash fully autonomous AI agents to handle routine business processes end-to-end without human touchpoints.',
+        'Transition to agentic AI: let intelligent systems independently manage and resolve standard operational workflows.',
+        'Empower AI agents with full autonomy to process, decide, and execute on lower-complexity business transactions.',
+        'Make the leap to autonomous operations: deploy multi-agent systems that work 24/7 without human bottlenecks.',
+      ],
     },
     scoring: {
       A: { IV: -5, OR: -5, HR: 5, TV: 5 },
@@ -194,8 +230,20 @@ export const LEVELS: Level[] = [
     month: 'Month 10',
     scenario: `With autonomous agents running loose, Gartner warns of "death by AI" litigation. A close competitor just suffered a massive data leak due to a prompt injection attack. The board is nervous.`,
     choices: {
-      A: 'Hit the brakes. Mandate that all AI usage be paused until a multi-year, foolproof governance framework is established.',
-      B: 'Invest aggressively in an AI Security Platform with real-time guardrails to dynamically monitor and quarantine rogue agent actions.',
+      A: [
+        'Hit the brakes. Mandate that all AI usage be paused until a multi-year, foolproof governance framework is established.',
+        'Full stop on AI deployment—freeze all initiatives until comprehensive policies and safeguards are bulletproof.',
+        'Halt everything: no AI moves forward until legal, compliance, and security teams sign off on an airtight framework.',
+        'Pump the brakes completely—better to lose momentum than risk catastrophic governance failure.',
+        'Shut down AI operations temporarily to build an ironclad governance structure before any further deployment.',
+      ],
+      B: [
+        'Invest aggressively in an AI Security Platform with real-time guardrails to dynamically monitor and quarantine rogue agent actions.',
+        'Deploy cutting-edge AI governance tools that provide continuous monitoring and instant threat neutralization.',
+        'Implement a "secure by design" approach: embed real-time safeguards that detect and contain risks without stopping innovation.',
+        'Build security into the system: invest in dynamic guardrails that protect while preserving deployment velocity.',
+        'Adopt an intelligent security layer that monitors AI behavior in real-time and automatically prevents harmful actions.',
+      ],
     },
     scoring: {
       A: { IV: -40, OR: -20, HR: -15, TV: -20 },
@@ -230,8 +278,20 @@ export const LEVELS: Level[] = [
     month: 'Month 12',
     scenario: `You have successfully scaled AI across the enterprise and hit your initial efficiency targets. What is your ultimate strategic maneuver for the final operating model?`,
     choices: {
-      A: 'The Automation Trap—Use the AI solely to automate legacy business processes, cut headcount, and immediately return cash to the bottom line.',
-      B: 'The Value Creator—Fundamentally redesign the business model around human-AI orchestration to launch entirely new, high-margin analytics services.',
+      A: [
+        'The Automation Trap—Use the AI solely to automate legacy business processes, cut headcount, and immediately return cash to the bottom line.',
+        'Maximize short-term returns: deploy AI primarily to reduce workforce costs and boost quarterly margins.',
+        'Focus on efficiency extraction—automate existing workflows, reduce staff, and deliver immediate shareholder value.',
+        'Take the cost-cutting path: leverage AI to streamline operations, minimize headcount, and accelerate profit margins.',
+        'Pursue operational efficiency: use AI to automate repetitive tasks, downsize teams, and drive immediate financial results.',
+      ],
+      B: [
+        'The Value Creator—Fundamentally redesign the business model around human-AI orchestration to launch entirely new, high-margin analytics services.',
+        'Transform the business: use AI to create new revenue streams and elevate your workforce to higher-value strategic roles.',
+        'Reimagine the operating model—combine human creativity with AI power to unlock entirely new service offerings.',
+        'Build for the future: redesign operations around human-AI collaboration to capture new market opportunities.',
+        'Pursue value creation: leverage AI not just for efficiency, but to launch innovative services that generate premium margins.',
+      ],
     },
     scoring: {
       A: { IV: 10, OR: 10, HR: -30, TV: 5 },
@@ -263,6 +323,26 @@ export const LEVELS: Level[] = [
 ];
 
 export const TOTAL_LEVELS = LEVELS.length;
+
+// Helper function to get a random variant index (0-4) for display variety
+export function getRandomVariantIndex(): number {
+  return Math.floor(Math.random() * 5);
+}
+
+// Helper function to get choice text for a specific variant
+export function getChoiceText(level: Level, choice: 'A' | 'B', variantIndex: number): string {
+  const variants = level.choices[choice];
+  // Fallback to first variant if index is out of bounds
+  return variants[variantIndex] || variants[0];
+}
+
+// Generate variant indices for all 5 levels (call once when game starts)
+export function generateVariantIndices(): { A: number; B: number }[] {
+  return LEVELS.map(() => ({
+    A: getRandomVariantIndex(),
+    B: getRandomVariantIndex(),
+  }));
+}
 
 export function calculateScores(choices: ('A' | 'B')[]): Scores {
   const scores = { ...INITIAL_SCORES };

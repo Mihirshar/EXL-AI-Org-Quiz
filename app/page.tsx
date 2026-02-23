@@ -13,7 +13,7 @@ import MonthTimeline from '@/components/MonthTimeline';
 import InfographicSidebar from '@/components/InfographicSidebar';
 import ArchetypeReveal from '@/components/ArchetypeReveal';
 import EXLLogo from '@/components/EXLLogo';
-import { LEVELS, INITIAL_SCORES, Scores, calculateScores } from '@/lib/gameData';
+import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices } from '@/lib/gameData';
 import { determineArchetype, Archetype } from '@/lib/archetypes';
 import { Level } from '@/lib/types';
 
@@ -33,6 +33,7 @@ function GameContent() {
   const [scores, setScores] = useState<Scores>(INITIAL_SCORES);
   const [finalArchetype, setFinalArchetype] = useState<Archetype | null>(null);
   const [currentSelectedChoice, setCurrentSelectedChoice] = useState<'A' | 'B' | null>(null);
+  const [variantIndices, setVariantIndices] = useState<{ A: number; B: number }[]>(() => generateVariantIndices());
   
   const { setCurrentPlayer, addPlayer, currentPlayer, clearCurrentPlayer, updateCurrentPlayerAvatar } = usePlayerContext();
 
@@ -121,6 +122,7 @@ function GameContent() {
     setScores(INITIAL_SCORES);
     setFinalArchetype(null);
     setCurrentSelectedChoice(null);
+    setVariantIndices(generateVariantIndices()); // Generate new variants for new game
     clearCurrentPlayer();
   }, [clearCurrentPlayer]);
 
@@ -217,6 +219,7 @@ function GameContent() {
                   currentLevelIndex={currentLevel}
                   scores={scores}
                   selectedChoice={currentSelectedChoice}
+                  variantIndices={variantIndices[currentLevel]}
                   onChoice={handleChoice}
                   onNext={handleNext}
                   onUndo={handleUndo}

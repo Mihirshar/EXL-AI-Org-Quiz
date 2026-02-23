@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChoiceCard from './ChoiceCard';
 import InsightReveal from './InsightReveal';
-import { Level, TOTAL_LEVELS, Scores } from '@/lib/gameData';
+import { Level, TOTAL_LEVELS, Scores, getChoiceText } from '@/lib/gameData';
 
 interface GameScreenProps {
   level: Level;
   currentLevelIndex: number;
   scores: Scores;
   selectedChoice: 'A' | 'B' | null;
+  variantIndices: { A: number; B: number };
   onChoice: (choice: 'A' | 'B') => void;
   onNext: () => void;
   onUndo?: () => void;
@@ -23,6 +24,7 @@ export default function GameScreen({
   currentLevelIndex,
   scores,
   selectedChoice,
+  variantIndices,
   onChoice,
   onNext,
   onUndo,
@@ -124,14 +126,14 @@ export default function GameScreen({
               >
                 <ChoiceCard
                   choice="A"
-                  description={level.choices.A}
+                  description={getChoiceText(level, 'A', variantIndices.A)}
                   isSelected={selectedChoice === 'A'}
                   isDisabled={selectedChoice !== null && selectedChoice !== 'A'}
                   onSelect={() => handleChoiceSelect('A')}
                 />
                 <ChoiceCard
                   choice="B"
-                  description={level.choices.B}
+                  description={getChoiceText(level, 'B', variantIndices.B)}
                   isSelected={selectedChoice === 'B'}
                   isDisabled={selectedChoice !== null && selectedChoice !== 'B'}
                   onSelect={() => handleChoiceSelect('B')}
