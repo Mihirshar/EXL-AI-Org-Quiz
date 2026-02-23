@@ -55,10 +55,10 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, onReset, 
         </h1>
       </motion.div>
 
-      {/* Main Content - Two Column Layout */}
-      <div className="flex-1 flex overflow-hidden">
+      {/* Main Content - Two Column Layout (stacks on mobile) */}
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* Left Column - Results */}
-        <div className="flex-1 p-4 overflow-y-auto">
+        <div className="flex-1 p-3 md:p-4 overflow-y-auto">
           <div className="max-w-xl mx-auto space-y-4">
             {/* User Info & Choices Row */}
             <motion.div
@@ -101,7 +101,7 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, onReset, 
               transition={{ delay: 0.3 }}
             >
               <p className="font-mono text-[9px] text-white/40 uppercase tracking-wider mb-2">Your Scorecard</p>
-              <div className="grid grid-cols-4 gap-3">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
                 {SCORE_METRICS.map((metric, index) => (
                   <ScoreMeter
                     key={metric.key}
@@ -204,16 +204,16 @@ export default function ResultScreen({ scores, choices, userAvatarUrl, onReset, 
           </div>
         </div>
 
-        {/* Right Column - Infographic */}
+        {/* Right Column - Infographic (hidden on mobile, shown at bottom on tablet, side on desktop) */}
         {archetype.infographicImage && (
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
-            className="w-[45%] flex-shrink-0 p-4 border-l border-border/30 flex items-center justify-center"
+            className="hidden sm:flex w-full lg:w-[45%] flex-shrink-0 p-3 md:p-4 border-t lg:border-t-0 lg:border-l border-border/30 items-center justify-center"
           >
             <div 
-              className="relative w-full h-full max-h-[500px] rounded-xl overflow-hidden border-2"
+              className="relative w-full h-64 sm:h-80 lg:h-full lg:max-h-[500px] rounded-xl overflow-hidden border-2"
               style={{ 
                 borderColor: `${archetype.color}50`,
                 boxShadow: `0 0 40px ${archetype.color}20`

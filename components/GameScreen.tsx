@@ -68,9 +68,9 @@ export default function GameScreen({
   const isLastLevel = currentLevelIndex === TOTAL_LEVELS - 1;
 
   return (
-    <div className="h-full flex flex-col px-6 py-4">
+    <div className="h-full flex flex-col px-4 md:px-6 py-3 md:py-4">
       {/* Top Controls */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3 md:mb-4">
         <div className="flex items-center gap-3">
           {onReset && (
             <button
@@ -94,17 +94,17 @@ export default function GameScreen({
       <div className="flex-1 flex items-start justify-center overflow-y-auto">
         <div className="max-w-2xl w-full">
           {/* Level Header */}
-          <div className="mb-4">
+          <div className="mb-3 md:mb-4">
             <p className="font-mono text-[10px] text-exl-orange tracking-[0.2em] uppercase mb-1">
               {level.month} · Decision {level.id} of {TOTAL_LEVELS}
             </p>
-            <h2 className="text-xl md:text-2xl font-bold text-white">
+            <h2 className="text-lg md:text-2xl font-bold text-white">
               {level.title}
             </h2>
           </div>
 
           {/* Scenario Card */}
-          <div className="bg-surface border-l-4 border-l-exl-orange border border-border rounded-xl p-4 mb-4">
+          <div className="bg-surface border-l-4 border-l-exl-orange border border-border rounded-xl p-3 md:p-4 mb-3 md:mb-4">
             <p className="font-mono text-[10px] text-white/40 uppercase tracking-wider mb-2">
               The Scenario
             </p>

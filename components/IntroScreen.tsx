@@ -34,7 +34,7 @@ export default function IntroScreen({ onStart }: IntroScreenProps) {
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="min-h-full flex flex-col items-center justify-center px-6 py-12"
+      className="min-h-full flex flex-col items-center justify-center px-4 md:px-6 py-8 md:py-12"
     >
       <div className="max-w-3xl w-full text-center">
         {/* Logo */}
@@ -84,7 +84,7 @@ export default function IntroScreen({ onStart }: IntroScreenProps) {
         {/* Scorecard Grid */}
         <motion.div
           variants={itemVariants}
-          className="grid grid-cols-2 gap-4 mb-8"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-3 md:gap-4 mb-6 md:mb-8"
         >
           {SCORE_METRICS.map((metric) => (
             <div

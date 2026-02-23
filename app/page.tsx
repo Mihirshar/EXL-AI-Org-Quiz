@@ -143,15 +143,21 @@ function GameContent() {
             transition={{ duration: 0.4 }}
             className="relative z-20 flex-shrink-0 border-b border-border/50 bg-background/80 backdrop-blur-sm"
           >
-            <div className="max-w-7xl mx-auto px-6 py-4">
-              <div className="flex items-center justify-between gap-8">
+            <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 md:py-4">
+              <div className="flex items-center justify-between gap-2 md:gap-8">
                 <EXLLogo size="sm" withGlow={false} />
-                <div className="flex-1 max-w-2xl">
+                <div className="flex-1 max-w-2xl hidden sm:block">
                   <MonthTimeline 
                     currentLevel={currentLevel} 
                     completedLevels={choices.length}
                     isComplete={phase === 'result' || phase === 'calculating'}
                   />
+                </div>
+                {/* Mobile: Show simple progress indicator */}
+                <div className="flex-1 sm:hidden text-center">
+                  <span className="text-xs text-white/60 font-mono">
+                    {phase === 'result' || phase === 'calculating' ? 'Complete' : `${currentLevel + 1}/5`}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2 text-sm">
                   {currentPlayer && (
@@ -186,7 +192,7 @@ function GameContent() {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -40 }}
               transition={{ duration: 0.4 }}
-              className="flex-shrink-0 w-80 border-r border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto"
+              className="hidden md:flex flex-shrink-0 w-80 border-r border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col"
             >
               <InfographicSidebar 
                 currentLevelIndex={currentLevel}

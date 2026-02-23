@@ -78,7 +78,7 @@ export default function RegistrationScreen({ onRegister }: RegistrationScreenPro
       variants={containerVariants}
       initial="hidden"
       animate="visible"
-      className="min-h-full flex flex-col items-center justify-center px-6 py-12"
+      className="min-h-full flex flex-col items-center justify-center px-4 md:px-6 py-8 md:py-12"
     >
       <div className="max-w-md w-full">
         {/* Logo */}
@@ -160,7 +160,7 @@ export default function RegistrationScreen({ onRegister }: RegistrationScreenPro
                 <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">
                   Your Archetype (Optional)
                 </label>
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {ARCHETYPES.map((a) => {
                     const isSelected = selfArchetypeId === a.id;
                     return (
