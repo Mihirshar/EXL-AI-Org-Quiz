@@ -104,6 +104,18 @@ export default function ScoreMeter({
             className="absolute top-0 h-full w-0.5 bg-white/40"
             style={{ left: `${targetPercentage}%` }}
           />
+          
+          {/* Moving indicator dot */}
+          <motion.div
+            initial={{ left: `${((0 - range.min) / rangeSpan) * 100}%` }}
+            animate={{ left: `${displayPercentage}%` }}
+            transition={{ delay: delay + 0.2, duration: 0.8, ease: [0.4, 0, 0.2, 1] }}
+            className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-2.5 h-2.5 rounded-full border border-background z-10"
+            style={{ 
+              backgroundColor: status === 'met' ? '#22c55e' : status === 'target' ? '#eab308' : '#ef4444',
+              boxShadow: `0 0 6px ${config.glow}`,
+            }}
+          />
         </div>
 
         {/* Value */}
