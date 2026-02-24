@@ -11,6 +11,7 @@ import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import BackgroundOrbs from '@/components/BackgroundOrbs';
 import MonthTimeline from '@/components/MonthTimeline';
 import InfographicSidebar from '@/components/InfographicSidebar';
+import InfographicImages from '@/components/InfographicImages';
 import ArchetypeReveal from '@/components/ArchetypeReveal';
 import EXLLogo from '@/components/EXLLogo';
 import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices } from '@/lib/gameData';
@@ -56,15 +57,12 @@ function GameContent() {
   const handleNext = useCallback(() => {
     if (currentSelectedChoice === null) return;
     
-    // Add choice to array and calculate scores
     const newChoices = [...choices, currentSelectedChoice];
     setChoices(newChoices);
     setScores(calculateScores(newChoices));
     
-    // Reset selected choice
     setCurrentSelectedChoice(null);
     
-    // Move to next level or end game
     if (currentLevel < LEVELS.length - 1) {
       setCurrentLevel(currentLevel + 1);
     } else {
@@ -122,12 +120,12 @@ function GameContent() {
     setScores(INITIAL_SCORES);
     setFinalArchetype(null);
     setCurrentSelectedChoice(null);
-    setVariantIndices(generateVariantIndices()); // Generate new variants for new game
+    setVariantIndices(generateVariantIndices());
     clearCurrentPlayer();
   }, [clearCurrentPlayer]);
 
   const showHeader = phase === 'game' || phase === 'calculating' || phase === 'result';
-  const showSidebar = phase === 'game';
+  const showSidebars = phase === 'game';
 
   return (
     <main className="relative h-screen bg-background overflow-hidden flex flex-col">
@@ -153,7 +151,6 @@ function GameContent() {
                     isComplete={phase === 'result' || phase === 'calculating'}
                   />
                 </div>
-                {/* Mobile: Show simple progress indicator */}
                 <div className="flex-1 sm:hidden text-center">
                   <span className="text-xs text-white/60 font-mono">
                     {phase === 'result' || phase === 'calculating' ? 'Complete' : `${currentLevel + 1}/5`}
@@ -184,9 +181,9 @@ function GameContent() {
 
       {/* Main Content Area */}
       <div className="relative z-10 flex-1 flex overflow-hidden">
-        {/* Left Sidebar - Infographics */}
+        {/* Left Sidebar - Strategic Intel */}
         <AnimatePresence>
-          {showSidebar && (
+          {showSidebars && (
             <motion.aside
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
@@ -267,6 +264,24 @@ function GameContent() {
             )}
           </AnimatePresence>
         </div>
+
+        {/* Right Sidebar - Infographic Images */}
+        <AnimatePresence>
+          {showSidebars && (
+            <motion.aside
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
+              transition={{ duration: 0.4 }}
+              className="hidden lg:flex flex-shrink-0 w-80 xl:w-96 border-l border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col"
+            >
+              <InfographicImages
+                currentLevelIndex={currentLevel}
+                selectedChoice={currentSelectedChoice}
+              />
+            </motion.aside>
+          )}
+        </AnimatePresence>
       </div>
     </main>
   );
