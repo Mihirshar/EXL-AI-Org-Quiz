@@ -344,6 +344,15 @@ export function generateVariantIndices(): { A: number; B: number }[] {
   }));
 }
 
+// Generate random display order for each level (shuffles which option appears first)
+// Returns array of tuples where each tuple is the display order ['A', 'B'] or ['B', 'A']
+export function generateDisplayOrder(): ('A' | 'B')[][] {
+  return LEVELS.map(() => {
+    const shouldSwap = Math.random() < 0.5;
+    return shouldSwap ? ['B', 'A'] : ['A', 'B'];
+  });
+}
+
 export function calculateScores(choices: ('A' | 'B')[]): Scores {
   const scores = { ...INITIAL_SCORES };
   

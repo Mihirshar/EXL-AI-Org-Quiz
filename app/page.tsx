@@ -14,7 +14,7 @@ import InfographicSidebar from '@/components/InfographicSidebar';
 import InfographicImages from '@/components/InfographicImages';
 import ArchetypeReveal from '@/components/ArchetypeReveal';
 import EXLLogo from '@/components/EXLLogo';
-import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices } from '@/lib/gameData';
+import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices, generateDisplayOrder } from '@/lib/gameData';
 import { determineArchetype, Archetype } from '@/lib/archetypes';
 import { Level } from '@/lib/types';
 
@@ -35,6 +35,7 @@ function GameContent() {
   const [finalArchetype, setFinalArchetype] = useState<Archetype | null>(null);
   const [currentSelectedChoice, setCurrentSelectedChoice] = useState<'A' | 'B' | null>(null);
   const [variantIndices, setVariantIndices] = useState<{ A: number; B: number }[]>(() => generateVariantIndices());
+  const [displayOrder, setDisplayOrder] = useState<('A' | 'B')[][]>(() => generateDisplayOrder());
   
   const { setCurrentPlayer, addPlayer, currentPlayer, clearCurrentPlayer, updateCurrentPlayerAvatar } = usePlayerContext();
 
@@ -121,6 +122,7 @@ function GameContent() {
     setFinalArchetype(null);
     setCurrentSelectedChoice(null);
     setVariantIndices(generateVariantIndices());
+    setDisplayOrder(generateDisplayOrder());
     clearCurrentPlayer();
   }, [clearCurrentPlayer]);
 
@@ -223,6 +225,7 @@ function GameContent() {
                   scores={scores}
                   selectedChoice={currentSelectedChoice}
                   variantIndices={variantIndices[currentLevel]}
+                  displayOrder={displayOrder[currentLevel]}
                   onChoice={handleChoice}
                   onNext={handleNext}
                   onUndo={handleUndo}
@@ -278,6 +281,7 @@ function GameContent() {
               <InfographicImages
                 currentLevelIndex={currentLevel}
                 selectedChoice={currentSelectedChoice}
+                displayOrder={displayOrder[currentLevel]}
               />
             </motion.aside>
           )}

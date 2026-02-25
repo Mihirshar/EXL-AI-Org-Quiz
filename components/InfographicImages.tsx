@@ -7,6 +7,7 @@ import { TOTAL_LEVELS } from '@/lib/gameData';
 interface InfographicImagesProps {
   currentLevelIndex: number;
   selectedChoice: 'A' | 'B' | null;
+  displayOrder: ('A' | 'B')[];
 }
 
 function getImagePath(levelIndex: number, option: 'A' | 'B'): string {
@@ -38,7 +39,21 @@ function ImageWithFallback({ src, alt, className }: { src: string; alt: string; 
   );
 }
 
-export default function InfographicImages({ currentLevelIndex, selectedChoice }: InfographicImagesProps) {
+export default function InfographicImages({ currentLevelIndex, selectedChoice, displayOrder }: InfographicImagesProps) {
+  const firstOption = displayOrder[0];
+  const secondOption = displayOrder[1];
+  
+  const optionStyles = {
+    A: {
+      selected: 'ring-2 ring-blue-400/60 shadow-[0_0_15px_rgba(59,130,246,0.2)]',
+      badge: 'bg-blue-500/80 border-blue-400/40',
+    },
+    B: {
+      selected: 'ring-2 ring-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.2)]',
+      badge: 'bg-purple-500/80 border-purple-400/40',
+    },
+  };
+
   return (
     <div className="p-3 h-full flex flex-col overflow-hidden">
       {/* Header */}
@@ -63,17 +78,17 @@ export default function InfographicImages({ currentLevelIndex, selectedChoice }:
             transition={{ duration: 0.3 }}
             className="flex flex-col gap-3"
           >
-            {/* Option A Image */}
+            {/* First Option Image (displayed as Option A) */}
             <div className={`
               relative rounded-xl overflow-hidden transition-all duration-300
-              ${selectedChoice === 'A' ? 'ring-2 ring-blue-400/60 shadow-[0_0_15px_rgba(59,130,246,0.2)]' : ''}
-              ${selectedChoice === 'B' ? 'opacity-50' : ''}
+              ${selectedChoice === firstOption ? optionStyles[firstOption].selected : ''}
+              ${selectedChoice !== null && selectedChoice !== firstOption ? 'opacity-50' : ''}
             `}>
-              <div className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-blue-500/80 text-white border border-blue-400/40 backdrop-blur-sm">
+              <div className={`absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[10px] font-bold font-mono text-white border backdrop-blur-sm ${optionStyles[firstOption].badge}`}>
                 Option A
               </div>
               <ImageWithFallback
-                src={getImagePath(currentLevelIndex, 'A')}
+                src={getImagePath(currentLevelIndex, firstOption)}
                 alt={`Decision ${currentLevelIndex + 1} - Option A infographic`}
                 className="w-full h-auto"
               />
@@ -86,17 +101,17 @@ export default function InfographicImages({ currentLevelIndex, selectedChoice }:
               <div className="flex-1 h-px bg-white/10" />
             </div>
 
-            {/* Option B Image */}
+            {/* Second Option Image (displayed as Option B) */}
             <div className={`
               relative rounded-xl overflow-hidden transition-all duration-300
-              ${selectedChoice === 'B' ? 'ring-2 ring-purple-400/60 shadow-[0_0_15px_rgba(168,85,247,0.2)]' : ''}
-              ${selectedChoice === 'A' ? 'opacity-50' : ''}
+              ${selectedChoice === secondOption ? optionStyles[secondOption].selected : ''}
+              ${selectedChoice !== null && selectedChoice !== secondOption ? 'opacity-50' : ''}
             `}>
-              <div className="absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[10px] font-bold font-mono bg-purple-500/80 text-white border border-purple-400/40 backdrop-blur-sm">
+              <div className={`absolute top-2 left-2 z-10 px-2 py-0.5 rounded-full text-[10px] font-bold font-mono text-white border backdrop-blur-sm ${optionStyles[secondOption].badge}`}>
                 Option B
               </div>
               <ImageWithFallback
-                src={getImagePath(currentLevelIndex, 'B')}
+                src={getImagePath(currentLevelIndex, secondOption)}
                 alt={`Decision ${currentLevelIndex + 1} - Option B infographic`}
                 className="w-full h-auto"
               />

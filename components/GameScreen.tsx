@@ -12,6 +12,7 @@ interface GameScreenProps {
   scores: Scores;
   selectedChoice: 'A' | 'B' | null;
   variantIndices: { A: number; B: number };
+  displayOrder: ('A' | 'B')[];
   onChoice: (choice: 'A' | 'B') => void;
   onNext: () => void;
   onUndo?: () => void;
@@ -25,6 +26,7 @@ export default function GameScreen({
   scores,
   selectedChoice,
   variantIndices,
+  displayOrder,
   onChoice,
   onNext,
   onUndo,
@@ -124,20 +126,19 @@ export default function GameScreen({
                 transition={{ duration: 0.3 }}
                 className="space-y-3"
               >
-                <ChoiceCard
-                  choice="A"
-                  description={getChoiceText(level, 'A', variantIndices.A)}
-                  isSelected={selectedChoice === 'A'}
-                  isDisabled={selectedChoice !== null && selectedChoice !== 'A'}
-                  onSelect={() => handleChoiceSelect('A')}
-                />
-                <ChoiceCard
-                  choice="B"
-                  description={getChoiceText(level, 'B', variantIndices.B)}
-                  isSelected={selectedChoice === 'B'}
-                  isDisabled={selectedChoice !== null && selectedChoice !== 'B'}
-                  onSelect={() => handleChoiceSelect('B')}
-                />
+                {displayOrder.map((actualChoice, displayIndex) => {
+                  const displayLabel = displayIndex === 0 ? 'A' : 'B';
+                  return (
+                    <ChoiceCard
+                      key={actualChoice}
+                      choice={displayLabel as 'A' | 'B'}
+                      description={getChoiceText(level, actualChoice, variantIndices[actualChoice])}
+                      isSelected={selectedChoice === actualChoice}
+                      isDisabled={selectedChoice !== null && selectedChoice !== actualChoice}
+                      onSelect={() => handleChoiceSelect(actualChoice)}
+                    />
+                  );
+                })}
               </motion.div>
             ) : (
               <motion.div
