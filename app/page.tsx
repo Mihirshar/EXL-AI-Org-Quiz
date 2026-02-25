@@ -36,6 +36,7 @@ function GameContent() {
   const [currentSelectedChoice, setCurrentSelectedChoice] = useState<'A' | 'B' | null>(null);
   const [variantIndices, setVariantIndices] = useState<{ A: number; B: number }[]>(() => generateVariantIndices());
   const [displayOrder, setDisplayOrder] = useState<('A' | 'B')[][]>(() => generateDisplayOrder());
+  const [showInfographics, setShowInfographics] = useState(true);
   
   const { setCurrentPlayer, addPlayer, currentPlayer, clearCurrentPlayer, updateCurrentPlayerAvatar } = usePlayerContext();
 
@@ -271,19 +272,42 @@ function GameContent() {
         {/* Right Sidebar - Infographic Images */}
         <AnimatePresence>
           {showSidebars && (
-            <motion.aside
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: 40 }}
-              transition={{ duration: 0.4 }}
-              className="hidden lg:flex flex-shrink-0 w-80 xl:w-96 border-l border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col"
-            >
-              <InfographicImages
-                currentLevelIndex={currentLevel}
-                selectedChoice={currentSelectedChoice}
-                displayOrder={displayOrder[currentLevel]}
-              />
-            </motion.aside>
+            <div className="hidden lg:flex flex-shrink-0 relative">
+              {/* Toggle Button */}
+              <button
+                onClick={() => setShowInfographics(!showInfographics)}
+                className="absolute -left-3 top-4 z-20 w-6 h-12 bg-surface border border-border/50 rounded-l-lg flex items-center justify-center hover:bg-white/10 transition-colors"
+                title={showInfographics ? 'Hide infographics' : 'Show infographics'}
+              >
+                <svg 
+                  className={`w-4 h-4 text-white/60 transition-transform duration-300 ${showInfographics ? '' : 'rotate-180'}`} 
+                  fill="none" 
+                  viewBox="0 0 24 24" 
+                  stroke="currentColor"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+              
+              {/* Sidebar Content */}
+              <AnimatePresence>
+                {showInfographics && (
+                  <motion.aside
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: 'auto' }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="w-80 xl:w-96 border-l border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col flex"
+                  >
+                    <InfographicImages
+                      currentLevelIndex={currentLevel}
+                      selectedChoice={currentSelectedChoice}
+                      displayOrder={displayOrder[currentLevel]}
+                    />
+                  </motion.aside>
+                )}
+              </AnimatePresence>
+            </div>
           )}
         </AnimatePresence>
       </div>
