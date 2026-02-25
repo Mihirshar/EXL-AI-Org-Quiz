@@ -67,32 +67,67 @@ export const ARCHETYPES: Archetype[] = [
 export function determineArchetype(scores: Scores): Archetype {
   const { TV, OR, IV, HR } = scores;
 
-  // Check conditions in order (first match wins)
+  // Calculate a "balance score" - how well-rounded the strategy is
+  // Balanced Catalyst should only be for truly balanced approaches
+  const isHighTV = TV > 35;
+  const isLowRisk = OR < 40;
+  const isHumanReady = HR > 0;
+  const isInnovative = IV > 0;
   
-  // 1. Balanced Catalyst: TV > 35 AND OR < 40 AND HR > 0
-  if (TV > 35 && OR < 40 && HR > 0) {
+  // Count how many "good" metrics are achieved
+  const metricsAchieved = [isHighTV, isLowRisk, isHumanReady, isInnovative].filter(Boolean).length;
+  
+  // 1. Balanced Catalyst: Must achieve ALL four metrics AND have strong balance
+  // TV > 35, OR < 40, HR > 0, IV > 0, AND HR must be meaningfully positive (> 20)
+  if (isHighTV && isLowRisk && HR > 20 && isInnovative) {
     return ARCHETYPES.find(a => a.id === 'balanced-catalyst')!;
   }
 
-  // 2. Technology Accelerator: IV > 40 AND (OR >= 40 OR HR <= 0)
-  if (IV > 40 && (OR >= 40 || HR <= 0)) {
+  // 2. Technology Accelerator: High innovation velocity but sacrificed human readiness or took on risk
+  // IV > 40 AND (high risk OR low human readiness)
+  if (IV > 40 && (OR >= 20 || HR <= 10)) {
     return ARCHETYPES.find(a => a.id === 'technology-accelerator')!;
   }
 
-  // 3. Governance Champion: OR < 40 AND TV <= 35
-  if (OR < 40 && TV <= 35) {
-    return ARCHETYPES.find(a => a.id === 'governance-champion')!;
-  }
-
-  // 4. Efficiency Optimizer: TV >= 35 AND HR < -10
-  if (TV >= 35 && HR < -10) {
+  // 3. Efficiency Optimizer: Achieved TV but at the cost of human readiness
+  // TV >= 35 AND HR is negative (workforce was sacrificed for efficiency)
+  if (TV >= 35 && HR < 0) {
     return ARCHETYPES.find(a => a.id === 'efficiency-optimizer')!;
   }
 
-  // Fallback: Governance Champion
+  // 4. Governance Champion: Prioritized low risk, may have sacrificed TV or innovation
+  // Low operational risk but didn't achieve high TV or was too conservative on innovation
+  if (OR < 20 && (TV <= 35 || IV <= 20)) {
+    return ARCHETYPES.find(a => a.id === 'governance-champion')!;
+  }
+
+  // Secondary checks for edge cases
+  
+  // High TV with moderate human readiness but high risk = Technology Accelerator
+  if (TV > 35 && OR >= 40) {
+    return ARCHETYPES.find(a => a.id === 'technology-accelerator')!;
+  }
+  
+  // Moderate TV with negative HR = Efficiency Optimizer
+  if (TV >= 25 && HR < 0) {
+    return ARCHETYPES.find(a => a.id === 'efficiency-optimizer')!;
+  }
+  
+  // High innovation but low TV = Technology Accelerator (tech-focused but not value-generating)
+  if (IV > 30 && TV <= 35) {
+    return ARCHETYPES.find(a => a.id === 'technology-accelerator')!;
+  }
+
+  // Default fallback based on strongest characteristic
+  if (HR > 0 && isLowRisk) {
+    return ARCHETYPES.find(a => a.id === 'governance-champion')!;
+  }
+  
+  // Final fallback: Governance Champion (conservative/cautious approach)
   return ARCHETYPES.find(a => a.id === 'governance-champion')!;
 }
 
 export function isWinningOutcome(scores: Scores): boolean {
-  return scores.TV > 35 && scores.OR < 40 && scores.HR > 0;
+  // Winning outcome matches the Balanced Catalyst criteria
+  return scores.TV > 35 && scores.OR < 40 && scores.HR > 20 && scores.IV > 0;
 }

@@ -183,44 +183,44 @@ export const LEVELS: Level[] = [
     scenario: `You've built capable AI tools, but productivity gains are capped at 10-15%. Gartner's research indicates that true step-change value comes from autonomous AI agents capable of multi-step reasoning without human intervention.`,
     choices: {
       A: [
-        'Continue scaling human-supervised Copilots, keeping humans firmly in the loop for every task.',
-        'Stay the course with AI assistants that require human approval at each step—safety and control remain paramount.',
-        'Expand the current copilot model where employees guide and verify every AI action before execution.',
-        'Maintain human oversight: scale AI tools that augment workers but never act independently.',
-        'Stick with the proven approach: AI suggests, humans decide and execute on every workflow.',
-      ],
-      B: [
         'Deploy an autonomous Multiagent System to negotiate and resolve tier-1 and tier-2 B2B disputes completely without human intervention.',
         'Unleash fully autonomous AI agents to handle routine business processes end-to-end without human touchpoints.',
         'Transition to agentic AI: let intelligent systems independently manage and resolve standard operational workflows.',
         'Empower AI agents with full autonomy to process, decide, and execute on lower-complexity business transactions.',
         'Make the leap to autonomous operations: deploy multi-agent systems that work 24/7 without human bottlenecks.',
       ],
+      B: [
+        'Continue scaling human-supervised Copilots, keeping humans firmly in the loop for every task.',
+        'Stay the course with AI assistants that require human approval at each step—safety and control remain paramount.',
+        'Expand the current copilot model where employees guide and verify every AI action before execution.',
+        'Maintain human oversight: scale AI tools that augment workers but never act independently.',
+        'Stick with the proven approach: AI suggests, humans decide and execute on every workflow.',
+      ],
     },
     scoring: {
-      A: { IV: -5, OR: -5, HR: 5, TV: 5 },
-      B: { IV: 30, OR: 20, HR: -5, TV: 20 },
+      A: { IV: 30, OR: 20, HR: -5, TV: 20 },
+      B: { IV: -5, OR: -5, HR: 5, TV: 5 },
     },
     insights: {
       A: {
-        first: 'Operations feel incredibly safe. Output quality is highly consistent.',
-        second: 'You hit a hard ceiling. Copilots yield only incremental 5–10% productivity gains. You mathematically fail to generate the 40% turnaround required.',
-      },
-      B: {
         first: 'Agents instantly clear massive backlogs. Volume processing scales exponentially without adding headcount. Staff feels uneasy about being replaced.',
         second: 'You shift from tracking "productivity" to hard P&L impact. This is the operational leverage required to hit your aggressive financial goals.',
+      },
+      B: {
+        first: 'Operations feel incredibly safe. Output quality is highly consistent.',
+        second: 'You hit a hard ceiling. Copilots yield only incremental 5–10% productivity gains. You mathematically fail to generate the 40% turnaround required.',
       },
     },
     infographics: {
       A: [
-        { title: 'Copilot Productivity Cap', stat: '10-15%', description: 'maximum productivity gains from human-in-the-loop AI', source: 'Gartner 2024', icon: '📊', trend: 'neutral' },
-        { title: 'Scaling Limitation', stat: 'Linear', description: 'growth pattern - headcount still drives capacity', source: 'McKinsey', icon: '📏', trend: 'neutral' },
-        { title: 'Innovation Ceiling', stat: '5x', description: 'slower innovation vs autonomous systems', source: 'MIT Tech Review', icon: '🚧', trend: 'down' },
-      ],
-      B: [
         { title: 'Agentic AI Impact', stat: '10x', description: 'productivity multiplier with autonomous agents', source: 'Gartner', icon: '🚀', trend: 'up' },
         { title: 'Cost Reduction', stat: '60%', description: 'operational cost savings from agent automation', source: 'Deloitte', icon: '💰', trend: 'up' },
         { title: 'Processing Speed', stat: '24/7', description: 'continuous operation without human bottlenecks', source: 'Accenture', icon: '⚡', trend: 'up' },
+      ],
+      B: [
+        { title: 'Copilot Productivity Cap', stat: '10-15%', description: 'maximum productivity gains from human-in-the-loop AI', source: 'Gartner 2024', icon: '📊', trend: 'neutral' },
+        { title: 'Scaling Limitation', stat: 'Linear', description: 'growth pattern - headcount still drives capacity', source: 'McKinsey', icon: '📏', trend: 'neutral' },
+        { title: 'Innovation Ceiling', stat: '5x', description: 'slower innovation vs autonomous systems', source: 'MIT Tech Review', icon: '🚧', trend: 'down' },
       ],
     },
   },
@@ -231,44 +231,44 @@ export const LEVELS: Level[] = [
     scenario: `With autonomous agents running loose, Gartner warns of "death by AI" litigation. A close competitor just suffered a massive data leak due to a prompt injection attack. The board is nervous.`,
     choices: {
       A: [
-        'Hit the brakes. Mandate that all AI usage be paused until a multi-year, foolproof governance framework is established.',
-        'Full stop on AI deployment—freeze all initiatives until comprehensive policies and safeguards are bulletproof.',
-        'Halt everything: no AI moves forward until legal, compliance, and security teams sign off on an airtight framework.',
-        'Pump the brakes completely—better to lose momentum than risk catastrophic governance failure.',
-        'Shut down AI operations temporarily to build an ironclad governance structure before any further deployment.',
-      ],
-      B: [
         'Invest aggressively in an AI Security Platform with real-time guardrails to dynamically monitor and quarantine rogue agent actions.',
         'Deploy cutting-edge AI governance tools that provide continuous monitoring and instant threat neutralization.',
         'Implement a "secure by design" approach: embed real-time safeguards that detect and contain risks without stopping innovation.',
         'Build security into the system: invest in dynamic guardrails that protect while preserving deployment velocity.',
         'Adopt an intelligent security layer that monitors AI behavior in real-time and automatically prevents harmful actions.',
       ],
+      B: [
+        'Hit the brakes. Mandate that all AI usage be paused until a multi-year, foolproof governance framework is established.',
+        'Full stop on AI deployment—freeze all initiatives until comprehensive policies and safeguards are bulletproof.',
+        'Halt everything: no AI moves forward until legal, compliance, and security teams sign off on an airtight framework.',
+        'Pump the brakes completely—better to lose momentum than risk catastrophic governance failure.',
+        'Shut down AI operations temporarily to build an ironclad governance structure before any further deployment.',
+      ],
     },
     scoring: {
-      A: { IV: -40, OR: -20, HR: -15, TV: -20 },
-      B: { IV: 10, OR: -25, HR: 15, TV: 10 },
+      A: { IV: 10, OR: -25, HR: 15, TV: 10 },
+      B: { IV: -40, OR: -20, HR: -15, TV: -20 },
     },
     insights: {
       A: {
-        first: 'Zero compliance breaches. The board enjoys total peace of mind regarding data leaks.',
-        second: 'Complete stagnation. Competitors capture your market share. Your top talent leaves out of frustration, effectively killing the turnaround story.',
-      },
-      B: {
         first: 'Security acts as a continuous monitor rather than a stop sign. Rogue actions are caught in milliseconds.',
         second: 'Employees feel safe innovating because the guardrails protect them. You sustain the high-speed deployment pace without triggering a regulatory disaster.',
+      },
+      B: {
+        first: 'Zero compliance breaches. The board enjoys total peace of mind regarding data leaks.',
+        second: 'Complete stagnation. Competitors capture your market share. Your top talent leaves out of frustration, effectively killing the turnaround story.',
       },
     },
     infographics: {
       A: [
-        { title: 'Innovation Freeze Cost', stat: '$50M+', description: 'average annual opportunity cost from AI pauses', source: 'BCG', icon: '❄️', trend: 'down' },
-        { title: 'Talent Attrition', stat: '45%', description: 'increase in tech talent leaving during AI freezes', source: 'LinkedIn', icon: '🚪', trend: 'down' },
-        { title: 'Market Share Loss', stat: '12-18%', description: 'typical loss to AI-forward competitors', source: 'Gartner', icon: '📉', trend: 'down' },
-      ],
-      B: [
         { title: 'Real-time Detection', stat: '<50ms', description: 'threat response time with modern AI guardrails', source: 'NIST', icon: '🛡️', trend: 'up' },
         { title: 'Innovation + Security', stat: '94%', description: 'of secure-by-design AI projects succeed', source: 'Forrester', icon: '✅', trend: 'up' },
         { title: 'Employee Confidence', stat: '+67%', description: 'increase in AI adoption with visible guardrails', source: 'PwC', icon: '🔐', trend: 'up' },
+      ],
+      B: [
+        { title: 'Innovation Freeze Cost', stat: '$50M+', description: 'average annual opportunity cost from AI pauses', source: 'BCG', icon: '❄️', trend: 'down' },
+        { title: 'Talent Attrition', stat: '45%', description: 'increase in tech talent leaving during AI freezes', source: 'LinkedIn', icon: '🚪', trend: 'down' },
+        { title: 'Market Share Loss', stat: '12-18%', description: 'typical loss to AI-forward competitors', source: 'Gartner', icon: '📉', trend: 'down' },
       ],
     },
   },
@@ -492,19 +492,6 @@ export const CHOICE_INFOGRAPHICS: Record<number, { A: ChoiceInfographic; B: Choi
   },
   3: {
     A: {
-      headline: 'Human-in-the-Loop',
-      subheadline: 'Supervised copilots with consistent output',
-      keyStats: [
-        { value: '10-15%', label: 'Max Gains', trend: 'neutral' },
-        { value: 'Linear', label: 'Scale Pattern', trend: 'neutral' },
-        { value: '5x', label: 'Slower Growth', trend: 'down' },
-      ],
-      insight: 'Copilots yield incremental gains but hit a hard ceiling. You may mathematically fail the 40% turnaround target.',
-      leadershipQuality: 'Steady Operator',
-      qualityIcon: '🛡️',
-      theme: 'risk',
-    },
-    B: {
       headline: 'Autonomous Agents',
       subheadline: 'Multi-agent systems for exponential scale',
       keyStats: [
@@ -517,22 +504,22 @@ export const CHOICE_INFOGRAPHICS: Record<number, { A: ChoiceInfographic; B: Choi
       qualityIcon: '🚀',
       theme: 'growth',
     },
+    B: {
+      headline: 'Human-in-the-Loop',
+      subheadline: 'Supervised copilots with consistent output',
+      keyStats: [
+        { value: '10-15%', label: 'Max Gains', trend: 'neutral' },
+        { value: 'Linear', label: 'Scale Pattern', trend: 'neutral' },
+        { value: '5x', label: 'Slower Growth', trend: 'down' },
+      ],
+      insight: 'Copilots yield incremental gains but hit a hard ceiling. You may mathematically fail the 40% turnaround target.',
+      leadershipQuality: 'Steady Operator',
+      qualityIcon: '🛡️',
+      theme: 'risk',
+    },
   },
   4: {
     A: {
-      headline: 'Full Stop Approach',
-      subheadline: 'Pause all AI until governance is perfect',
-      keyStats: [
-        { value: '$50M+', label: 'Opportunity Cost', trend: 'down' },
-        { value: '45%', label: 'Talent Attrition', trend: 'down' },
-        { value: '12-18%', label: 'Market Loss', trend: 'down' },
-      ],
-      insight: 'Complete stagnation while competitors capture market share. Top talent leaves out of frustration.',
-      leadershipQuality: 'Risk Averse',
-      qualityIcon: '🛑',
-      theme: 'risk',
-    },
-    B: {
       headline: 'Dynamic Guardrails',
       subheadline: 'Real-time AI security with continuous innovation',
       keyStats: [
@@ -544,6 +531,19 @@ export const CHOICE_INFOGRAPHICS: Record<number, { A: ChoiceInfographic; B: Choi
       leadershipQuality: 'Balanced Innovator',
       qualityIcon: '⚖️',
       theme: 'balance',
+    },
+    B: {
+      headline: 'Full Stop Approach',
+      subheadline: 'Pause all AI until governance is perfect',
+      keyStats: [
+        { value: '$50M+', label: 'Opportunity Cost', trend: 'down' },
+        { value: '45%', label: 'Talent Attrition', trend: 'down' },
+        { value: '12-18%', label: 'Market Loss', trend: 'down' },
+      ],
+      insight: 'Complete stagnation while competitors capture market share. Top talent leaves out of frustration.',
+      leadershipQuality: 'Risk Averse',
+      qualityIcon: '🛑',
+      theme: 'risk',
     },
   },
   5: {
