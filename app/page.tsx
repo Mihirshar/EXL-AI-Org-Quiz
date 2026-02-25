@@ -272,7 +272,13 @@ function GameContent() {
         {/* Right Sidebar - Infographic Images */}
         <AnimatePresence>
           {showSidebars && (
-            <div className="hidden lg:flex flex-shrink-0 relative">
+            <motion.div 
+              initial={{ opacity: 0, x: 40 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 40 }}
+              transition={{ duration: 0.4 }}
+              className="hidden lg:flex flex-shrink-0 relative"
+            >
               {/* Toggle Button */}
               <button
                 onClick={() => setShowInfographics(!showInfographics)}
@@ -290,24 +296,20 @@ function GameContent() {
               </button>
               
               {/* Sidebar Content */}
-              <AnimatePresence>
-                {showInfographics && (
-                  <motion.aside
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: 'auto' }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="w-80 xl:w-96 border-l border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col flex"
-                  >
-                    <InfographicImages
-                      currentLevelIndex={currentLevel}
-                      selectedChoice={currentSelectedChoice}
-                      displayOrder={displayOrder[currentLevel]}
-                    />
-                  </motion.aside>
-                )}
-              </AnimatePresence>
-            </div>
+              <aside
+                className={`
+                  w-80 xl:w-96 border-l border-border/50 bg-background/50 backdrop-blur-sm overflow-y-auto flex-col flex
+                  transition-all duration-300 ease-in-out
+                  ${showInfographics ? 'opacity-100' : 'opacity-0 w-0 overflow-hidden'}
+                `}
+              >
+                <InfographicImages
+                  currentLevelIndex={currentLevel}
+                  selectedChoice={currentSelectedChoice}
+                  displayOrder={displayOrder[currentLevel]}
+                />
+              </aside>
+            </motion.div>
           )}
         </AnimatePresence>
       </div>
