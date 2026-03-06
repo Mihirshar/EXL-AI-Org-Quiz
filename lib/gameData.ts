@@ -350,6 +350,12 @@ export function generateDisplayOrder(): ('A' | 'B')[][] {
   });
 }
 
+// Generate a single random display order for one level
+export function generateSingleDisplayOrder(): ('A' | 'B')[] {
+  const shouldSwap = Math.random() < 0.5;
+  return shouldSwap ? ['B', 'A'] : ['A', 'B'];
+}
+
 export function calculateScores(choices: ('A' | 'B')[]): Scores {
   const scores = { ...INITIAL_SCORES };
   

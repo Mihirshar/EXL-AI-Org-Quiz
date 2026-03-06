@@ -15,7 +15,7 @@ import StockTicker from '@/components/StockTicker';
 import TickerSidebar from '@/components/TickerSidebar';
 import ArchetypeReveal from '@/components/ArchetypeReveal';
 import EXLLogo from '@/components/EXLLogo';
-import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices, generateDisplayOrder, INITIAL_STOCK, calculateStockState, getTickerResult, CHOICE_INFOGRAPHICS } from '@/lib/gameData';
+import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices, generateDisplayOrder, generateSingleDisplayOrder, INITIAL_STOCK, calculateStockState, getTickerResult, CHOICE_INFOGRAPHICS } from '@/lib/gameData';
 import { determineArchetype, Archetype } from '@/lib/archetypes';
 import { Level, StockState, ChoiceRecord } from '@/lib/types';
 
@@ -105,7 +105,14 @@ function GameContent() {
     setCurrentSelectedChoice(null);
     
     if (currentLevel < LEVELS.length - 1) {
-      setCurrentLevel(currentLevel + 1);
+      const nextLevel = currentLevel + 1;
+      setCurrentLevel(nextLevel);
+      // Randomize display order for the next level
+      setDisplayOrder(prev => {
+        const newOrder = [...prev];
+        newOrder[nextLevel] = generateSingleDisplayOrder();
+        return newOrder;
+      });
     } else {
       const finalScores = calculateScores(newChoices);
       const archetype = determineArchetype(finalScores);
@@ -118,12 +125,19 @@ function GameContent() {
     if (choices.length > 0) {
       const newChoices = choices.slice(0, -1);
       const newRecords = choiceRecords.slice(0, -1);
+      const prevLevel = Math.max(0, currentLevel - 1);
       setChoices(newChoices);
       setChoiceRecords(newRecords);
       setScores(calculateScores(newChoices));
       setStockState(calculateStockState(newRecords));
-      setCurrentLevel(Math.max(0, currentLevel - 1));
+      setCurrentLevel(prevLevel);
       setCurrentSelectedChoice(null);
+      // Randomize display order for the level we're going back to
+      setDisplayOrder(prev => {
+        const newOrder = [...prev];
+        newOrder[prevLevel] = generateSingleDisplayOrder();
+        return newOrder;
+      });
     }
   }, [choices, currentLevel, choiceRecords]);
 
