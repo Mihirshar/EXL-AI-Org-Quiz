@@ -1,14 +1,14 @@
 'use client';
 
 import { createContext, useContext, useState, useCallback, ReactNode } from 'react';
-import { Player, CurrentPlayer, Level, LevelStats, ArchetypeStats, LEVELS } from './types';
+import { Player, CurrentPlayer, Level, LevelStats, ArchetypeStats, LEVELS, generateTickerSymbol } from './types';
 import { ARCHETYPES } from './archetypes';
 
 interface PlayerContextType {
   players: Player[];
   currentPlayer: CurrentPlayer | null;
   addPlayer: (player: Player) => void;
-  setCurrentPlayer: (name: string, level: Level, photoUrl?: string, selfArchetypeId?: string) => void;
+  setCurrentPlayer: (name: string, level: Level, companyName?: string, photoUrl?: string, selfArchetypeId?: string) => void;
   updateCurrentPlayerAvatar: (avatarUrl: string) => void;
   clearCurrentPlayer: () => void;
   getLevelStats: () => LevelStats[];
@@ -26,8 +26,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     setPlayers((prev) => [...prev, player]);
   }, []);
 
-  const setCurrentPlayer = useCallback((name: string, level: Level, photoUrl?: string, selfArchetypeId?: string) => {
-    setCurrentPlayerState({ name, level, photoUrl, selfArchetypeId });
+  const setCurrentPlayer = useCallback((name: string, level: Level, companyName?: string, photoUrl?: string, selfArchetypeId?: string) => {
+    const tickerSymbol = generateTickerSymbol(companyName || '');
+    setCurrentPlayerState({ name, level, companyName, tickerSymbol, photoUrl, selfArchetypeId });
   }, []);
 
   const updateCurrentPlayerAvatar = useCallback((avatarUrl: string) => {

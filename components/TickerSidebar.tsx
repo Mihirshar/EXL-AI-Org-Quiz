@@ -8,6 +8,8 @@ interface TickerSidebarProps {
   stockState: StockState;
   choiceRecords: ChoiceRecord[];
   currentLevelIndex: number;
+  tickerSymbol?: string;
+  companyName?: string;
 }
 
 function StockChart({ data, height = 140 }: { data: number[]; height?: number }) {
@@ -180,7 +182,7 @@ function MarketSentiment({ price }: { price: number }) {
   );
 }
 
-export default function TickerSidebar({ stockState, choiceRecords, currentLevelIndex }: TickerSidebarProps) {
+export default function TickerSidebar({ stockState, choiceRecords, currentLevelIndex, tickerSymbol = 'EXLS', companyName }: TickerSidebarProps) {
   const tickerColors = {
     gain: { text: 'text-ticker-gain', bg: 'bg-ticker-gain/10', icon: '🟢', color: '#00FF88' },
     loss: { text: 'text-ticker-loss', bg: 'bg-ticker-loss/10', icon: '🔴', color: '#FF3B3B' },
@@ -197,11 +199,18 @@ export default function TickerSidebar({ stockState, choiceRecords, currentLevelI
             animate={{ opacity: [1, 0.3, 1] }}
             transition={{ duration: 1, repeat: Infinity }}
           />
-          <span className="font-mono text-xs md:text-sm font-bold text-white">EXLS</span>
+          <span className="font-mono text-xs md:text-sm font-bold text-white">{tickerSymbol}</span>
           <span className="text-white/40 text-[10px] font-mono">NYSE</span>
         </div>
         <span className="text-white/30 text-[9px] font-mono">LIVE</span>
       </div>
+
+      {/* Company Name */}
+      {companyName && (
+        <div className="mb-2 px-1">
+          <p className="text-white/60 text-xs truncate">{companyName}</p>
+        </div>
+      )}
 
       {/* Current Price - Compact */}
       <div className="mb-2 md:mb-3 p-2 md:p-3 bg-surface rounded-lg border border-border">

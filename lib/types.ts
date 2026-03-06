@@ -35,9 +35,38 @@ export interface Player {
 export interface CurrentPlayer {
   name: string;
   level: Level;
+  companyName?: string;
+  tickerSymbol?: string;
   photoUrl?: string;
   avatarUrl?: string;
   selfArchetypeId?: string;
+}
+
+export function generateTickerSymbol(companyName: string): string {
+  if (!companyName || companyName.trim().length === 0) {
+    return 'EXLS';
+  }
+  
+  const name = companyName.trim().toUpperCase();
+  const words = name.split(/\s+/).filter(w => w.length > 0);
+  
+  if (words.length === 1) {
+    const word = words[0];
+    if (word.length <= 4) {
+      return word;
+    }
+    const consonants = word.replace(/[AEIOU]/g, '');
+    if (consonants.length >= 3) {
+      return consonants.slice(0, 4);
+    }
+    return word.slice(0, 4);
+  }
+  
+  if (words.length === 2) {
+    return (words[0].slice(0, 2) + words[1].slice(0, 2)).slice(0, 4);
+  }
+  
+  return words.map(w => w[0]).join('').slice(0, 4);
 }
 
 export interface LevelStats {

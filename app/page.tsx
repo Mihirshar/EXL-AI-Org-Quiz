@@ -44,8 +44,8 @@ function GameContent() {
   
   const { setCurrentPlayer, addPlayer, currentPlayer, clearCurrentPlayer, updateCurrentPlayerAvatar } = usePlayerContext();
 
-  const handleRegister = useCallback((name: string, level: Level, photoUrl?: string, avatarUrl?: string, selfArchetypeId?: string) => {
-    setCurrentPlayer(name, level, photoUrl, selfArchetypeId);
+  const handleRegister = useCallback((name: string, level: Level, companyName?: string, photoUrl?: string, avatarUrl?: string, selfArchetypeId?: string) => {
+    setCurrentPlayer(name, level, companyName, photoUrl, selfArchetypeId);
     if (avatarUrl) {
       updateCurrentPlayerAvatar(avatarUrl);
     }
@@ -185,7 +185,11 @@ function GameContent() {
                 {/* Ticker - visible on tablet and up during game */}
                 {showTickerInHeader && (
                   <div className="flex-1 max-w-md mx-2 md:mx-4 hidden md:block">
-                    <StockTicker stockState={stockState} onFlash={handleTickerFlash} />
+                    <StockTicker 
+                      stockState={stockState} 
+                      tickerSymbol={currentPlayer?.tickerSymbol}
+                      onFlash={handleTickerFlash} 
+                    />
                   </div>
                 )}
                 
@@ -349,6 +353,8 @@ function GameContent() {
                   stockState={stockState}
                   choiceRecords={choiceRecords}
                   currentLevelIndex={currentLevel}
+                  tickerSymbol={currentPlayer?.tickerSymbol}
+                  companyName={currentPlayer?.companyName}
                 />
               </aside>
             </motion.div>

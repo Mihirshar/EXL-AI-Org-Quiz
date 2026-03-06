@@ -6,6 +6,7 @@ import { StockState } from '@/lib/types';
 
 interface StockTickerProps {
   stockState: StockState;
+  tickerSymbol?: string;
   onFlash?: (type: 'gain' | 'loss' | 'volatile') => void;
 }
 
@@ -51,7 +52,7 @@ function Sparkline({ data, color }: { data: number[]; color: string }) {
   );
 }
 
-export default function StockTicker({ stockState, onFlash }: StockTickerProps) {
+export default function StockTicker({ stockState, tickerSymbol = 'EXLS', onFlash }: StockTickerProps) {
   const [showFlash, setShowFlash] = useState(false);
   const [flashType, setFlashType] = useState<'gain' | 'loss' | 'volatile'>('gain');
   const [displayPrice, setDisplayPrice] = useState(stockState.price);
@@ -136,7 +137,7 @@ export default function StockTicker({ stockState, onFlash }: StockTickerProps) {
             }}
             transition={{ duration: 1.5, repeat: Infinity }}
           />
-          <span className="font-mono text-xs md:text-sm font-bold text-white">EXLS</span>
+          <span className="font-mono text-xs md:text-sm font-bold text-white">{tickerSymbol}</span>
         </div>
 
         {/* Price */}

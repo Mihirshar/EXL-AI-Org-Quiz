@@ -8,7 +8,7 @@ import { LEVELS, Level } from '@/lib/types';
 import { ARCHETYPES } from '@/lib/archetypes';
 
 interface RegistrationScreenProps {
-  onRegister: (name: string, level: Level, photoUrl?: string, avatarUrl?: string, selfArchetypeId?: string) => void;
+  onRegister: (name: string, level: Level, companyName?: string, photoUrl?: string, avatarUrl?: string, selfArchetypeId?: string) => void;
 }
 
 type Step = 'details' | 'photo';
@@ -16,6 +16,7 @@ type Step = 'details' | 'photo';
 export default function RegistrationScreen({ onRegister }: RegistrationScreenProps) {
   const [step, setStep] = useState<Step>('details');
   const [name, setName] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [level, setLevel] = useState<Level | ''>('');
   const [selfArchetypeId, setSelfArchetypeId] = useState<string | null>(null);
   const [error, setError] = useState('');
@@ -36,6 +37,7 @@ export default function RegistrationScreen({ onRegister }: RegistrationScreenPro
     console.log('RegistrationScreen handlePhotoCapture called', { 
       name: name.trim(), 
       level, 
+      companyName: companyName.trim(),
       hasPhoto: !!photoDataUrl, 
       hasAvatar: !!avatarDataUrl 
     });
@@ -43,6 +45,7 @@ export default function RegistrationScreen({ onRegister }: RegistrationScreenPro
     onRegister(
       name.trim(),
       level as Level,
+      companyName.trim() || undefined,
       photoDataUrl,
       avatarDataUrl,
       selfArchetypeId || undefined
@@ -50,7 +53,7 @@ export default function RegistrationScreen({ onRegister }: RegistrationScreenPro
   };
 
   const handleSkipPhoto = () => {
-    onRegister(name.trim(), level as Level, undefined, undefined, selfArchetypeId || undefined);
+    onRegister(name.trim(), level as Level, companyName.trim() || undefined, undefined, undefined, selfArchetypeId || undefined);
   };
 
   const containerVariants = {
@@ -125,6 +128,23 @@ export default function RegistrationScreen({ onRegister }: RegistrationScreenPro
                   placeholder="Enter your name"
                   className="w-full px-4 py-3 bg-background border border-border rounded-xl text-white placeholder-white/30 focus:border-exl-orange focus:outline-none transition-colors"
                 />
+              </div>
+
+              {/* Company Name Input */}
+              <div>
+                <label className="block text-white/50 font-mono text-xs uppercase tracking-wider mb-2">
+                  Company Name <span className="text-white/30">(Optional)</span>
+                </label>
+                <input
+                  type="text"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  placeholder="e.g., Google, Microsoft, Acme Corp"
+                  className="w-full px-4 py-3 bg-background border border-border rounded-xl text-white placeholder-white/30 focus:border-exl-orange focus:outline-none transition-colors"
+                />
+                <p className="text-white/30 text-xs mt-1">
+                  We&apos;ll create a stock ticker symbol for your company
+                </p>
               </div>
 
               {/* Level Selection */}
