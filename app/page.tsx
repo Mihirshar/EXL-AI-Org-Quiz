@@ -58,7 +58,26 @@ function GameContent() {
 
   const handleChoice = useCallback((choice: 'A' | 'B') => {
     setCurrentSelectedChoice(choice);
-  }, []);
+    
+    // Immediately update stock price when option is selected
+    const level = LEVELS[currentLevel];
+    const tickerResult = getTickerResult(level.id, choice);
+    const choiceInfo = CHOICE_INFOGRAPHICS[level.id]?.[choice];
+    
+    const previewRecord: ChoiceRecord = {
+      level: level.id,
+      choice: choice,
+      choiceLabel: choiceInfo?.headline || `Option ${choice}`,
+      tickerResult,
+      priceAfter: 0,
+    };
+    
+    // Calculate from committed records + the preview selection
+    const previewRecords = [...choiceRecords, previewRecord];
+    const newStockState = calculateStockState(previewRecords);
+    
+    setStockState(newStockState);
+  }, [currentLevel, choiceRecords]);
 
   const handleNext = useCallback(() => {
     if (currentSelectedChoice === null) return;
@@ -67,20 +86,17 @@ function GameContent() {
     const tickerResult = getTickerResult(level.id, currentSelectedChoice);
     const choiceInfo = CHOICE_INFOGRAPHICS[level.id]?.[currentSelectedChoice];
     
+    // Commit the choice record (stock state already updated in handleChoice)
     const newRecord: ChoiceRecord = {
       level: level.id,
       choice: currentSelectedChoice,
       choiceLabel: choiceInfo?.headline || `Option ${currentSelectedChoice}`,
       tickerResult,
-      priceAfter: 0,
+      priceAfter: stockState.price,
     };
     
     const newRecords = [...choiceRecords, newRecord];
-    const newStockState = calculateStockState(newRecords);
-    newRecord.priceAfter = newStockState.price;
-    
     setChoiceRecords(newRecords);
-    setStockState(newStockState);
     
     const newChoices = [...choices, currentSelectedChoice];
     setChoices(newChoices);
@@ -96,7 +112,7 @@ function GameContent() {
       setFinalArchetype(archetype);
       setPhase('calculating');
     }
-  }, [currentLevel, choices, currentSelectedChoice, choiceRecords]);
+  }, [currentLevel, choices, currentSelectedChoice, choiceRecords, stockState.price]);
 
   const handleUndo = useCallback(() => {
     if (choices.length > 0) {
