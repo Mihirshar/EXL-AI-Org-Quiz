@@ -22,6 +22,11 @@ const config: Config = {
         background: '#0F0F0F',
         success: '#4ADE80',
         failure: '#F87171',
+        ticker: {
+          gain: '#00FF88',
+          loss: '#FF3B3B',
+          volatile: '#FFB800',
+        },
       },
       fontFamily: {
         sans: ['var(--font-dm-sans)', 'system-ui', 'sans-serif'],

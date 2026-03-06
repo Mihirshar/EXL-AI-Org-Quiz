@@ -1,11 +1,8 @@
-export type ScoreKey = 'IV' | 'OR' | 'HR' | 'TV';
+import { TickerResult, StockState, ChoiceRecord, Scores } from './types';
 
-export interface Scores {
-  IV: number;
-  OR: number;
-  HR: number;
-  TV: number;
-}
+export type { Scores };
+
+export type ScoreKey = 'IV' | 'OR' | 'HR' | 'TV';
 
 export interface ScoreChange {
   IV: number;
@@ -575,3 +572,113 @@ export const CHOICE_INFOGRAPHICS: Record<number, { A: ChoiceInfographic; B: Choi
     },
   },
 };
+
+export const INITIAL_STOCK: StockState = {
+  price: 100.00,
+  history: [100.00],
+  change: 0,
+  changePercent: 0,
+};
+
+export const TICKER_RESULTS: Record<number, { A: TickerResult; B: TickerResult }> = {
+  1: {
+    A: {
+      type: 'volatile',
+      label: 'Volatile Bump',
+      percent: 1.5,
+      analystNote: 'Aggressive spending on AI, but ROI timeline unclear due to training gaps.',
+    },
+    B: {
+      type: 'loss',
+      label: 'Minor Dip',
+      percent: -1.0,
+      analystNote: 'Q1 capital heavy on training. Street anxious for faster deployment.',
+    },
+  },
+  2: {
+    A: {
+      type: 'loss',
+      label: 'Correction',
+      percent: -2.5,
+      analystNote: 'Reports of AI inaccuracies in claims processing rattling investors.',
+    },
+    B: {
+      type: 'gain',
+      label: 'Steady Climb',
+      percent: 3.0,
+      analystNote: 'Proprietary model creating significant operational moat. Margins improving.',
+    },
+  },
+  3: {
+    A: {
+      type: 'gain',
+      label: 'Massive Surge',
+      percent: 7.0,
+      analystNote: 'Unprecedented efficiency gains from multi-agent systems. Strong Buy.',
+    },
+    B: {
+      type: 'loss',
+      label: 'Stagnation',
+      percent: -4.0,
+      analystNote: 'Company falling behind competitors adopting autonomous agents. Downgrade.',
+    },
+  },
+  4: {
+    A: {
+      type: 'gain',
+      label: 'Confidence Rally',
+      percent: 5.0,
+      analystNote: 'Best-in-class AI governance driving sustainable growth. Risk discount removed.',
+    },
+    B: {
+      type: 'loss',
+      label: 'The Crash',
+      percent: -12.0,
+      analystNote: 'AI program indefinitely paused. Competitors seizing market share. Sell now.',
+    },
+  },
+  5: {
+    A: {
+      type: 'volatile',
+      label: 'Short Squeeze Pop',
+      percent: 4.0,
+      analystNote: 'Q4 earnings beat on aggressive headcount reduction. Long-term outlook negative.',
+    },
+    B: {
+      type: 'gain',
+      label: 'The Boom',
+      percent: 10.0,
+      analystNote: 'Successful pivot to AI-first revenue models. The new industry benchmark.',
+    },
+  },
+};
+
+export function calculateStockState(choiceRecords: ChoiceRecord[]): StockState {
+  let price = 100.00;
+  const history = [100.00];
+
+  for (const record of choiceRecords) {
+    const multiplier = 1 + (record.tickerResult.percent / 100);
+    price = price * multiplier;
+    history.push(price);
+  }
+
+  const change = price - 100;
+  const changePercent = ((price - 100) / 100) * 100;
+
+  return {
+    price: Math.round(price * 100) / 100,
+    history,
+    change: Math.round(change * 100) / 100,
+    changePercent: Math.round(changePercent * 100) / 100,
+  };
+}
+
+export function getTickerResult(levelId: number, choice: 'A' | 'B'): TickerResult {
+  return TICKER_RESULTS[levelId]?.[choice] || {
+    type: 'volatile',
+    label: 'Unknown',
+    percent: 0,
+    analystNote: 'No data available.',
+  };
+}

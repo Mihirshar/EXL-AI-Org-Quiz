@@ -1,4 +1,9 @@
-import { Scores } from './gameData';
+export interface Scores {
+  IV: number;
+  OR: number;
+  HR: number;
+  TV: number;
+}
 
 export const LEVELS = [
   'Board Member',
@@ -48,4 +53,26 @@ export interface ArchetypeStats {
   name: string;
   count: number;
   color: string;
+}
+
+export interface TickerResult {
+  type: 'gain' | 'loss' | 'volatile';
+  label: string;
+  percent: number;
+  analystNote: string;
+}
+
+export interface StockState {
+  price: number;
+  history: number[];
+  change: number;
+  changePercent: number;
+}
+
+export interface ChoiceRecord {
+  level: number;
+  choice: 'A' | 'B';
+  choiceLabel: string;
+  tickerResult: TickerResult;
+  priceAfter: number;
 }
