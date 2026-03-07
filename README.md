@@ -16,6 +16,9 @@ This is a production-grade, interactive React application used in live boardroom
 - 🎮 **3-Phase Gameplay**: Intro → 5 Decision Levels → Results Dashboard
 - 📊 **Real-time Scoring**: Track four metrics across every decision
 - 🎭 **Leadership Archetypes**: Get assigned one of four leadership profiles based on your choices
+- 📈 **Live Stock Ticker**: Watch your company's stock price react to each decision in real-time
+- 🔀 **Dual Question Sets**: Randomly selects between Set A and Set B at game start for variety
+- 🎲 **Randomized Display Order**: Choice positions (A/B) shuffle each level to prevent pattern memorization
 - ✨ **Premium Animations**: Smooth page transitions and micro-interactions with Framer Motion
 - 🎨 **EXL Branding**: Custom theme with EXL Orange (#F26522)
 
@@ -53,11 +56,20 @@ Open [http://localhost:3000](http://localhost:3000) to play the game.
 - "Accept the Mandate" CTA to begin
 
 ### Phase 2: Game Screen (5 Levels)
-1. **The Readiness Dilemma** (Month 1) - Budget allocation
-2. **The Domain Crucible** (Month 4) - DSLM vs generic LLM
-3. **The Agentic Shift** (Month 7) - Copilots vs autonomous agents
-4. **The Trust & Governance Shield** (Month 10) - Pause vs guardrails
-5. **The Operating Model** (Month 12) - Automation vs value creation
+
+**Set A (Gartner/Cultural Shift Focus):**
+1. **The Readiness Dilemma** (Month 1) - Tech-first vs People-first budget allocation
+2. **The Domain Crucible** (Month 4) - Generic LLM vs Domain-Specific Language Model
+3. **The Agentic Shift** (Month 7) - Autonomous agents vs Human-supervised copilots
+4. **The Trust & Governance Shield** (Month 10) - Dynamic guardrails vs Full AI pause
+5. **The Operating Model** (Month 12) - Automation trap vs Value creation
+
+**Set B (PBM Audit/Computer Use Focus):**
+1. **The Readiness Dilemma** (Month 1) - Unicorn Hunt vs Internal Academy
+2. **The Domain Crucible** (Month 4) - Vector Search (RAG) vs Knowledge Graph (Graph RAG)
+3. **The Agentic Shift** (Month 7) - Integration Slog vs Claude Computer Use
+4. **The Trust & Governance Shield** (Month 10) - Human Air-Gap vs Supervisor Model
+5. **The Operating Model** (Month 12) - Service Efficiency vs Data Productization
 
 ### Phase 3: Results Dashboard
 - Animated score meters for each metric
@@ -76,23 +88,29 @@ Open [http://localhost:3000](http://localhost:3000) to play the game.
 ```
 board-challenge/
 ├── app/
-│   ├── layout.tsx       # Root layout with fonts
-│   ├── page.tsx         # Main game orchestrator
-│   └── globals.css      # Tailwind + custom styles
+│   ├── layout.tsx          # Root layout with fonts
+│   ├── page.tsx            # Main game orchestrator
+│   └── globals.css         # Tailwind + custom styles
 ├── components/
-│   ├── IntroScreen.tsx  # Phase 1 welcome
-│   ├── GameScreen.tsx   # Phase 2 decisions
-│   ├── ResultScreen.tsx # Phase 3 dashboard
-│   ├── ScoreMeter.tsx   # Animated score bar
-│   ├── ChoiceCard.tsx   # A/B decision cards
-│   ├── ProgressBar.tsx  # 5-segment tracker
-│   ├── ArchetypeCard.tsx# Leadership reveal
-│   ├── BackgroundOrbs.tsx# Ambient effects
-│   └── EXLLogo.tsx      # Brand logo component
+│   ├── IntroScreen.tsx     # Phase 1 welcome
+│   ├── GameScreen.tsx      # Phase 2 decisions
+│   ├── ResultScreen.tsx    # Phase 3 dashboard
+│   ├── RegistrationScreen.tsx # Player registration with company name
+│   ├── StockTicker.tsx     # Animated stock price display
+│   ├── TickerSidebar.tsx   # Full stock chart sidebar
+│   ├── InfographicSidebar.tsx # Strategic intel sidebar
+│   ├── MonthTimeline.tsx   # Progress timeline
+│   ├── ScoreMeter.tsx      # Animated score bar
+│   ├── ChoiceCard.tsx      # A/B decision cards
+│   ├── ArchetypeReveal.tsx # Leadership reveal animation
+│   ├── BackgroundOrbs.tsx  # Ambient effects
+│   └── EXLLogo.tsx         # Brand logo component
 ├── lib/
-│   ├── gameData.ts      # Levels, scoring, insights
-│   └── archetypes.ts    # Archetype definitions
-└── tailwind.config.ts   # Custom EXL theme
+│   ├── gameData.ts         # Levels (Set A & B), scoring, ticker results
+│   ├── archetypes.ts       # Archetype definitions
+│   ├── types.ts            # TypeScript interfaces
+│   └── playerContext.tsx   # Player state management
+└── tailwind.config.ts      # Custom EXL theme
 ```
 
 ## Customization
@@ -112,7 +130,7 @@ colors: {
 
 ### Adding New Levels
 
-Add to the `LEVELS` array in `lib/gameData.ts`:
+Add to `LEVELS_SET_A` or `LEVELS_SET_B` in `lib/gameData.ts`:
 ```typescript
 {
   id: 6,
@@ -120,8 +138,8 @@ Add to the `LEVELS` array in `lib/gameData.ts`:
   month: 'Month 15',
   scenario: 'Description...',
   choices: {
-    A: 'Option A description',
-    B: 'Option B description',
+    A: ['Variant 1', 'Variant 2', 'Variant 3', 'Variant 4', 'Variant 5'],
+    B: ['Variant 1', 'Variant 2', 'Variant 3', 'Variant 4', 'Variant 5'],
   },
   scoring: {
     A: { IV: +10, OR: +5, HR: -5, TV: +8 },
@@ -133,6 +151,15 @@ Add to the `LEVELS` array in `lib/gameData.ts`:
   },
 }
 ```
+
+### Dual Question Set System
+
+The game randomly selects between Set A and Set B when a player starts. Each set has:
+- Different scenarios and choice descriptions
+- Independent scoring values
+- Separate ticker results and infographics
+
+Use `selectRandomSet()` to get a random set, and helper functions like `getLevels(questionSet)` to retrieve set-specific data.
 
 ## License
 
