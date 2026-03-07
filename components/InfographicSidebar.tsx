@@ -1,12 +1,14 @@
 'use client';
 
 import { motion, AnimatePresence } from 'framer-motion';
-import { LEVELS, CHOICE_INFOGRAPHICS, ChoiceInfographic, Level } from '@/lib/gameData';
+import { getLevels, getChoiceInfographics, ChoiceInfographic, Level } from '@/lib/gameData';
+import { QuestionSet } from '@/lib/types';
 
 interface InfographicSidebarProps {
   currentLevelIndex: number;
   choices: ('A' | 'B')[];
   selectedChoice: 'A' | 'B' | null;
+  questionSet?: QuestionSet;
 }
 
 const THEME_STYLES = {
@@ -136,13 +138,15 @@ function InfographicCard({ data, levelIndex }: { data: ChoiceInfographic; levelI
   );
 }
 
-function ChoiceHistory({ choices }: { choices: ('A' | 'B')[] }) {
+function ChoiceHistory({ choices, questionSet = 'A' }: { choices: ('A' | 'B')[]; questionSet?: QuestionSet }) {
   if (choices.length === 0) return null;
+
+  const choiceInfographics = getChoiceInfographics(questionSet);
 
   return (
     <div className="flex gap-1 flex-wrap">
       {choices.map((choice, index) => {
-        const info = CHOICE_INFOGRAPHICS[index + 1]?.[choice];
+        const info = choiceInfographics[index + 1]?.[choice];
         
         return (
           <div
@@ -190,10 +194,13 @@ function WaitingState({ levelTitle }: { levelTitle: string }) {
   );
 }
 
-export default function InfographicSidebar({ currentLevelIndex, choices, selectedChoice }: InfographicSidebarProps) {
-  const currentLevel = LEVELS[currentLevelIndex];
-  const currentInfo = selectedChoice && CHOICE_INFOGRAPHICS[currentLevelIndex + 1]
-    ? CHOICE_INFOGRAPHICS[currentLevelIndex + 1][selectedChoice]
+export default function InfographicSidebar({ currentLevelIndex, choices, selectedChoice, questionSet = 'A' }: InfographicSidebarProps) {
+  const levels = getLevels(questionSet);
+  const choiceInfographics = getChoiceInfographics(questionSet);
+  
+  const currentLevel = levels[currentLevelIndex];
+  const currentInfo = selectedChoice && choiceInfographics[currentLevelIndex + 1]
+    ? choiceInfographics[currentLevelIndex + 1][selectedChoice]
     : null;
 
   const showWaiting = !selectedChoice && currentLevel;
@@ -206,7 +213,7 @@ export default function InfographicSidebar({ currentLevelIndex, choices, selecte
           <span className="text-sm">📊</span>
           <span className="font-medium text-white text-sm">Strategic Intel</span>
         </div>
-        {choices.length > 0 && <ChoiceHistory choices={choices} />}
+        {choices.length > 0 && <ChoiceHistory choices={choices} questionSet={questionSet} />}
       </div>
 
       {/* Main Content - Fixed height, no scroll */}

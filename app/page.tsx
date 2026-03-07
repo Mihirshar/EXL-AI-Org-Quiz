@@ -15,9 +15,23 @@ import StockTicker from '@/components/StockTicker';
 import TickerSidebar from '@/components/TickerSidebar';
 import ArchetypeReveal from '@/components/ArchetypeReveal';
 import EXLLogo from '@/components/EXLLogo';
-import { LEVELS, INITIAL_SCORES, Scores, calculateScores, generateVariantIndices, generateDisplayOrder, generateSingleDisplayOrder, INITIAL_STOCK, calculateStockState, getTickerResult, CHOICE_INFOGRAPHICS } from '@/lib/gameData';
+import { 
+  INITIAL_SCORES, 
+  Scores, 
+  generateSingleDisplayOrder, 
+  INITIAL_STOCK, 
+  calculateStockState, 
+  getTickerResult,
+  selectRandomSet,
+  getLevels,
+  getChoiceInfographics,
+  calculateScoresForSet,
+  generateVariantIndicesForSet,
+  generateDisplayOrderForSet,
+  Level as GameLevel,
+} from '@/lib/gameData';
 import { determineArchetype, Archetype } from '@/lib/archetypes';
-import { Level, StockState, ChoiceRecord } from '@/lib/types';
+import { Level, StockState, ChoiceRecord, QuestionSet } from '@/lib/types';
 
 type Phase = 'registration' | 'intro' | 'game' | 'calculating' | 'result' | 'dashboard';
 
@@ -35,8 +49,16 @@ function GameContent() {
   const [scores, setScores] = useState<Scores>(INITIAL_SCORES);
   const [finalArchetype, setFinalArchetype] = useState<Archetype | null>(null);
   const [currentSelectedChoice, setCurrentSelectedChoice] = useState<'A' | 'B' | null>(null);
-  const [variantIndices, setVariantIndices] = useState<{ A: number; B: number }[]>(() => generateVariantIndices());
-  const [displayOrder, setDisplayOrder] = useState<('A' | 'B')[][]>(() => generateDisplayOrder());
+  
+  // Question Set - randomly selected at game start, persists for entire session
+  const [questionSet, setQuestionSet] = useState<QuestionSet>(() => selectRandomSet());
+  
+  // Derived data based on question set
+  const levels = getLevels(questionSet);
+  const choiceInfographics = getChoiceInfographics(questionSet);
+  
+  const [variantIndices, setVariantIndices] = useState<{ A: number; B: number }[]>(() => generateVariantIndicesForSet(questionSet));
+  const [displayOrder, setDisplayOrder] = useState<('A' | 'B')[][]>(() => generateDisplayOrderForSet(questionSet));
   const [showTicker, setShowTicker] = useState(true);
   const [stockState, setStockState] = useState<StockState>(INITIAL_STOCK);
   const [choiceRecords, setChoiceRecords] = useState<ChoiceRecord[]>([]);
@@ -60,9 +82,9 @@ function GameContent() {
     setCurrentSelectedChoice(choice);
     
     // Immediately update stock price when option is selected
-    const level = LEVELS[currentLevel];
-    const tickerResult = getTickerResult(level.id, choice);
-    const choiceInfo = CHOICE_INFOGRAPHICS[level.id]?.[choice];
+    const level = levels[currentLevel];
+    const tickerResult = getTickerResult(level.id, choice, questionSet);
+    const choiceInfo = choiceInfographics[level.id]?.[choice];
     
     const previewRecord: ChoiceRecord = {
       level: level.id,
@@ -77,14 +99,14 @@ function GameContent() {
     const newStockState = calculateStockState(previewRecords);
     
     setStockState(newStockState);
-  }, [currentLevel, choiceRecords]);
+  }, [currentLevel, choiceRecords, levels, questionSet, choiceInfographics]);
 
   const handleNext = useCallback(() => {
     if (currentSelectedChoice === null) return;
     
-    const level = LEVELS[currentLevel];
-    const tickerResult = getTickerResult(level.id, currentSelectedChoice);
-    const choiceInfo = CHOICE_INFOGRAPHICS[level.id]?.[currentSelectedChoice];
+    const level = levels[currentLevel];
+    const tickerResult = getTickerResult(level.id, currentSelectedChoice, questionSet);
+    const choiceInfo = choiceInfographics[level.id]?.[currentSelectedChoice];
     
     // Commit the choice record (stock state already updated in handleChoice)
     const newRecord: ChoiceRecord = {
@@ -100,11 +122,11 @@ function GameContent() {
     
     const newChoices = [...choices, currentSelectedChoice];
     setChoices(newChoices);
-    setScores(calculateScores(newChoices));
+    setScores(calculateScoresForSet(newChoices, questionSet));
     
     setCurrentSelectedChoice(null);
     
-    if (currentLevel < LEVELS.length - 1) {
+    if (currentLevel < levels.length - 1) {
       const nextLevel = currentLevel + 1;
       setCurrentLevel(nextLevel);
       // Randomize display order for the next level
@@ -114,12 +136,12 @@ function GameContent() {
         return newOrder;
       });
     } else {
-      const finalScores = calculateScores(newChoices);
+      const finalScores = calculateScoresForSet(newChoices, questionSet);
       const archetype = determineArchetype(finalScores);
       setFinalArchetype(archetype);
       setPhase('calculating');
     }
-  }, [currentLevel, choices, currentSelectedChoice, choiceRecords, stockState.price]);
+  }, [currentLevel, choices, currentSelectedChoice, choiceRecords, stockState.price, levels, questionSet, choiceInfographics]);
 
   const handleUndo = useCallback(() => {
     if (choices.length > 0) {
@@ -128,7 +150,7 @@ function GameContent() {
       const prevLevel = Math.max(0, currentLevel - 1);
       setChoices(newChoices);
       setChoiceRecords(newRecords);
-      setScores(calculateScores(newChoices));
+      setScores(calculateScoresForSet(newChoices, questionSet));
       setStockState(calculateStockState(newRecords));
       setCurrentLevel(prevLevel);
       setCurrentSelectedChoice(null);
@@ -139,10 +161,10 @@ function GameContent() {
         return newOrder;
       });
     }
-  }, [choices, currentLevel, choiceRecords]);
+  }, [choices, currentLevel, choiceRecords, questionSet]);
 
   const handleCalculationComplete = useCallback(() => {
-    const finalScores = calculateScores(choices);
+    const finalScores = calculateScoresForSet(choices, questionSet);
     const archetype = determineArchetype(finalScores);
     
     if (currentPlayer) {
@@ -161,7 +183,7 @@ function GameContent() {
     }
     
     setPhase('result');
-  }, [choices, currentPlayer, addPlayer]);
+  }, [choices, currentPlayer, addPlayer, questionSet]);
 
   const handleViewDashboard = useCallback(() => {
     setPhase('dashboard');
@@ -172,6 +194,10 @@ function GameContent() {
   }, []);
 
   const handleReset = useCallback(() => {
+    // Select a new random question set for the new game
+    const newQuestionSet = selectRandomSet();
+    setQuestionSet(newQuestionSet);
+    
     setPhase('registration');
     setCurrentLevel(0);
     setChoices([]);
@@ -180,8 +206,8 @@ function GameContent() {
     setStockState(INITIAL_STOCK);
     setFinalArchetype(null);
     setCurrentSelectedChoice(null);
-    setVariantIndices(generateVariantIndices());
-    setDisplayOrder(generateDisplayOrder());
+    setVariantIndices(generateVariantIndicesForSet(newQuestionSet));
+    setDisplayOrder(generateDisplayOrderForSet(newQuestionSet));
     clearCurrentPlayer();
   }, [clearCurrentPlayer]);
 
@@ -274,6 +300,7 @@ function GameContent() {
                 currentLevelIndex={currentLevel}
                 choices={choices}
                 selectedChoice={currentSelectedChoice}
+                questionSet={questionSet}
               />
             </motion.aside>
           )}
@@ -297,7 +324,7 @@ function GameContent() {
             {phase === 'game' && (
               <motion.div key={`game-${currentLevel}`} {...contentTransition} className="h-full">
                 <GameScreen
-                  level={LEVELS[currentLevel]}
+                  level={levels[currentLevel]}
                   currentLevelIndex={currentLevel}
                   scores={scores}
                   selectedChoice={currentSelectedChoice}

@@ -1,4 +1,4 @@
-import { TickerResult, StockState, ChoiceRecord, Scores } from './types';
+import { TickerResult, StockState, ChoiceRecord, Scores, QuestionSet } from './types';
 
 export type { Scores };
 
@@ -14,6 +14,9 @@ export interface ScoreChange {
 export interface Insight {
   first: string;
   second: string;
+  diagnosis?: string;        // Set B: "You chose speed over structure"
+  hiddenConnection?: string; // Set B: "Linear Logic" / "Causal Logic"
+  outcome?: string;          // Set B: "Hallucinations / Compliance Failure"
 }
 
 export interface Infographic {
@@ -76,7 +79,10 @@ export const INITIAL_SCORES: Scores = {
   TV: 0,
 };
 
-export const LEVELS: Level[] = [
+export type { QuestionSet };
+
+// SET A - Original questions (Gartner/cultural shift focus)
+export const LEVELS_SET_A: Level[] = [
   {
     id: 1,
     title: 'The Readiness Dilemma',
@@ -319,7 +325,284 @@ export const LEVELS: Level[] = [
   },
 ];
 
-export const TOTAL_LEVELS = LEVELS.length;
+// SET B - Alternative questions (Team building/PBM Audit focus)
+export const LEVELS_SET_B: Level[] = [
+  {
+    id: 1,
+    title: 'The Readiness Dilemma',
+    month: 'Month 1',
+    scenario: `You need to build your core AI team immediately to start the turnaround.`,
+    choices: {
+      A: [
+        'Spend 80% of your budget hiring a "SWAT Team" of external, high-priced AI experts from Silicon Valley to build the solutions for you.',
+        'Recruit top-tier external AI talent aggressively—bring in Silicon Valley\'s best to fast-track your AI capabilities.',
+        'Invest heavily in external "unicorn" hires: world-class AI specialists who can build solutions from scratch.',
+        'Assemble an elite external team: pour resources into recruiting proven AI experts from tech giants.',
+        'Go external-first: allocate 80% of budget to hiring premium AI consultants and specialists.',
+      ],
+      B: [
+        'Spend 80% of your budget launching a "Context Engineering" certification to upskill your existing domain experts (underwriters, claims adjusters) to build their own tools.',
+        'Invest in your people: fund a comprehensive AI upskilling program for your domain experts who know the business.',
+        'Build from within: create an internal AI academy to transform your existing workforce into AI-capable builders.',
+        'Prioritize internal talent development: launch certification programs to upskill domain experts in AI.',
+        'Empower your existing team: invest heavily in training your underwriters and claims adjusters to build AI tools.',
+      ],
+    },
+    scoring: {
+      A: { IV: 25, OR: 20, HR: -25, TV: -5 },
+      B: { IV: -5, OR: -5, HR: 25, TV: 15 },
+    },
+    insights: {
+      A: {
+        first: 'You assemble a brilliant team in weeks.',
+        second: 'The external "unicorns" don\'t understand your legacy business. Your internal staff feels alienated and refuses to adopt the tools the "outsiders" built. The turnaround stalls due to cultural rejection.',
+        diagnosis: 'You chose speed over cultural fit.',
+        hiddenConnection: 'Shelfware Risk',
+        outcome: 'Stalled Rollout',
+      },
+      B: {
+        first: 'Progress is slow; you spend Q1 teaching rather than building.',
+        second: 'Your domain experts build tools that actually solve the right problems. Retention soars, and value generation compounds in Q3/Q4.',
+        diagnosis: 'You chose sustainable capability over quick wins.',
+        hiddenConnection: 'Context Engineering',
+        outcome: 'Rapid Adoption',
+      },
+    },
+    infographics: {
+      A: [
+        { title: 'External Hire Risk', stat: '67%', description: 'of external AI hires leave within 18 months', source: 'LinkedIn 2024', icon: '🚪', trend: 'down' },
+        { title: 'Cultural Rejection', stat: '72%', description: 'of internally-rejected tools become shelfware', source: 'Gartner', icon: '📉', trend: 'down' },
+        { title: 'Integration Time', stat: '6-12mo', description: 'for external hires to understand legacy systems', source: 'McKinsey', icon: '⏰', trend: 'neutral' },
+      ],
+      B: [
+        { title: 'Domain Expert ROI', stat: '4.2x', description: 'higher success rate when domain experts build AI', source: 'BCG 2024', icon: '📈', trend: 'up' },
+        { title: 'Retention Impact', stat: '+45%', description: 'employee retention with upskilling programs', source: 'Deloitte', icon: '🤝', trend: 'up' },
+        { title: 'Problem-Fit', stat: '89%', description: 'accuracy in identifying real business problems', source: 'MIT Sloan', icon: '🎯', trend: 'up' },
+      ],
+    },
+  },
+  {
+    id: 2,
+    title: 'The Domain Crucible',
+    month: 'Month 4',
+    scenario: `You are launching the new PBM Audit module to detect fraud and waste in millions of pharmacy claims. The contracts contain highly complex, nested pricing rules (e.g., "Drug A is covered only if dispensed by Pharmacy Type B in Region C").`,
+    choices: {
+      A: [
+        'Ingest all contracts into a standard Vector Database. The AI will retrieve relevant text chunks based on keyword similarity to answer audit questions quickly. (Fast setup, low complexity).',
+        'Deploy Vector Search with standard RAG—quick to implement and handles simple queries effectively.',
+        'Go with keyword-based retrieval: fast, proven technology that gets you to market quickly.',
+        'Implement standard RAG architecture: ingest documents and let similarity search find relevant clauses.',
+        'Choose the rapid path: Vector Database with semantic search for immediate audit capability.',
+      ],
+      B: [
+        'Invest time to map the contracts into a structured Knowledge Graph. This explicitly links Drugs, Pharmacies, and Pricing Rules in a web of logic before the AI ever attempts to audit a claim. (Slower setup, high architectural rigor).',
+        'Build a Knowledge Graph that maps the causal relationships between drugs, pharmacies, regions, and pricing rules.',
+        'Create explicit logical connections: invest in Graph RAG to capture the nested rule structures.',
+        'Architect for complexity: build a relationship-aware system that understands rule dependencies.',
+        'Choose structural rigor: map contracts into a Knowledge Graph that preserves logical relationships.',
+      ],
+    },
+    scoring: {
+      A: { IV: 25, OR: 35, HR: -15, TV: -10 },
+      B: { IV: -10, OR: -25, HR: 20, TV: 40 },
+    },
+    insights: {
+      A: {
+        first: 'The system goes live in weeks. It successfully answers simple questions like "What is the price of insulin?"',
+        second: 'The AI fails on "Second Order" logic. It retrieves the pricing clause but misses the exclusion clause buried in a different PDF. The audit is riddled with false positives. Auditors stop using the tool because they can\'t trust it. Turnaround Failed.',
+        diagnosis: 'You chose speed over structure.',
+        hiddenConnection: 'Linear Logic',
+        outcome: 'Hallucinations / Compliance Failure',
+      },
+      B: {
+        first: 'Development takes an extra 2 months. The board is impatient.',
+        second: 'Because the Knowledge Graph mapped the relationships (not just the text), the AI catches complex fraud patterns that human auditors missed—like a pharmacy splitting claims to bypass limits. You recover 40% more value than projected. Turnaround Secured.',
+        diagnosis: 'You chose Causal Structure over speed.',
+        hiddenConnection: 'Causal Logic',
+        outcome: 'Defensible Audit / 100% Accuracy',
+      },
+    },
+    infographics: {
+      A: [
+        { title: 'RAG Accuracy Limit', stat: '73%', description: 'accuracy ceiling for complex nested rules', source: 'Stanford HAI', icon: '📊', trend: 'neutral' },
+        { title: 'False Positive Rate', stat: '34%', description: 'error rate on multi-clause queries', source: 'Everest Group', icon: '⚠️', trend: 'down' },
+        { title: 'Auditor Trust', stat: '-52%', description: 'drop in tool usage after reliability issues', source: 'Forrester', icon: '📉', trend: 'down' },
+      ],
+      B: [
+        { title: 'Graph RAG Accuracy', stat: '98%+', description: 'on complex nested rule queries', source: 'Everest Group', icon: '🎯', trend: 'up' },
+        { title: 'Fraud Detection', stat: '+40%', description: 'more value recovered vs linear search', source: 'PwC 2024', icon: '💰', trend: 'up' },
+        { title: 'Causal Reasoning', stat: '10x', description: 'better at multi-hop logical queries', source: 'MIT', icon: '🧠', trend: 'up' },
+      ],
+    },
+  },
+  {
+    id: 3,
+    title: 'The Agentic Shift',
+    month: 'Month 7',
+    scenario: `Your underwriting team spends 60% of their day toggling between 12 distinct legacy applications (Citrix, Mainframe, Web) to gather risk data. These systems have no APIs.`,
+    choices: {
+      A: [
+        'Spend 6 months building custom RPA bots and API wrappers to connect the AI to these legacy systems safely.',
+        'Take the traditional IT approach: build proper integrations with APIs and RPA over the next two quarters.',
+        'Invest in infrastructure: create robust, maintainable connections between all legacy systems.',
+        'Build it right: dedicate time to proper system integration before deploying AI capabilities.',
+        'Follow IT best practices: construct API layers and RPA bots for reliable, auditable connections.',
+      ],
+      B: [
+        'Deploy Anthropic\'s "Computer Use" capability immediately, allowing the model to visually "see" the screens, move the cursor, and click through the legacy apps just like a human operator.',
+        'Unleash Claude Computer Use: let the AI navigate legacy systems visually, bypassing integration bottlenecks.',
+        'Go agentic immediately: deploy visual AI agents that interact with screens like human operators.',
+        'Skip the integration queue: use Computer Use to have AI operate legacy systems directly.',
+        'Embrace autonomous operation: deploy AI that can see, click, and navigate any application interface.',
+      ],
+    },
+    scoring: {
+      A: { IV: -20, OR: -10, HR: -5, TV: -5 },
+      B: { IV: 35, OR: 30, HR: -15, TV: 25 },
+    },
+    insights: {
+      A: {
+        first: 'It\'s the "proper" IT approach. Safe and predictable.',
+        second: 'It\'s too slow. By the time you build the APIs, the market has moved. You burn half your turnaround time on plumbing rather than value generation.',
+        diagnosis: 'You chose safety over speed.',
+        hiddenConnection: 'Human Bottleneck',
+        outcome: 'Stagnant Growth',
+      },
+      B: {
+        first: 'Incredible velocity. You bypass IT integration bottlenecks entirely.',
+        second: 'The AI occasionally "hallucinates" a mouse click, deleting a file or approving a risky policy. You have speed, but you are riding a unicycle on a tightrope.',
+        diagnosis: 'You chose velocity over control.',
+        hiddenConnection: 'Operational Leverage',
+        outcome: 'Exponential Scale',
+      },
+    },
+    infographics: {
+      A: [
+        { title: 'Integration Timeline', stat: '6-12mo', description: 'typical API/RPA build time for legacy systems', source: 'Gartner', icon: '⏰', trend: 'neutral' },
+        { title: 'Opportunity Cost', stat: '$25M+', description: 'value lost during integration delays', source: 'McKinsey', icon: '💸', trend: 'down' },
+        { title: 'Market Position', stat: '-18%', description: 'competitive ground lost to faster movers', source: 'BCG', icon: '📉', trend: 'down' },
+      ],
+      B: [
+        { title: 'Deployment Speed', stat: '10x', description: 'faster than traditional integration', source: 'Anthropic', icon: '🚀', trend: 'up' },
+        { title: 'Cycle Time', stat: '-60%', description: 'reduction in underwriting process time', source: 'Deloitte', icon: '⚡', trend: 'up' },
+        { title: 'Risk Factor', stat: 'High', description: 'requires robust governance layer', source: 'Forrester', icon: '⚠️', trend: 'neutral' },
+      ],
+    },
+  },
+  {
+    id: 4,
+    title: 'The Trust & Governance Shield',
+    month: 'Month 10',
+    scenario: `Your "Computer Use" agents are now live and performing thousands of actions per hour. Since you already have a Sandbox, the new risk is Execution Control—preventing the agent from clicking the wrong button in production.`,
+    choices: {
+      A: [
+        'The AI can do all the research, but every final "Write" action (e.g., Issuing Policy, Sending Wire) must be queued for a human to manually click "Approve."',
+        'Implement a human approval gate: AI prepares everything, but humans must authorize all consequential actions.',
+        'Create an air-gap: AI handles research and recommendations, humans handle all execution.',
+        'Maintain human control: require manual approval for every action that changes data or commits resources.',
+        'Build a human checkpoint: AI queues all write operations for human review and execution.',
+      ],
+      B: [
+        'Deploy a secondary, lightweight "Constitutional AI" model that monitors the primary agent\'s reasoning trace in real-time and autonomously blocks any action that violates policy, without human intervention.',
+        'Implement AI-on-AI governance: a supervisor model watches and blocks policy violations at machine speed.',
+        'Deploy autonomous guardrails: let a specialized AI monitor and control the primary agent\'s actions.',
+        'Build self-healing governance: AI supervisors that catch and prevent bad actions in milliseconds.',
+        'Create an AI safety net: autonomous monitoring that blocks violations without human bottlenecks.',
+      ],
+    },
+    scoring: {
+      A: { IV: -25, OR: -20, HR: 10, TV: -15 },
+      B: { IV: 20, OR: 10, HR: 5, TV: 20 },
+    },
+    insights: {
+      A: {
+        first: 'You sleep well at night. Zero risk of an AI rogue trade.',
+        second: 'You re-introduced the bottleneck you just removed. Humans cannot keep up with the AI\'s volume. The backlog explodes, and the "Turnaround" efficiency gains are wiped out by the human queue.',
+        diagnosis: 'You chose absolute control over scalability.',
+        hiddenConnection: 'Shadow AI',
+        outcome: 'Innovation Paralysis',
+      },
+      B: {
+        first: 'It feels risky letting AI police AI.',
+        second: 'It works. The Supervisor catches 99.9% of bad actions at machine speed. You achieve "Safe Autonomy," allowing the business to scale exponentially while maintaining governance.',
+        diagnosis: 'You chose intelligent automation over manual control.',
+        hiddenConnection: 'Self-Healing AI',
+        outcome: 'Safe Autonomy',
+      },
+    },
+    infographics: {
+      A: [
+        { title: 'Human Throughput', stat: '50/hr', description: 'max approvals per human reviewer', source: 'Deloitte', icon: '🐌', trend: 'down' },
+        { title: 'Backlog Growth', stat: '400%', description: 'queue explosion when AI outpaces humans', source: 'McKinsey', icon: '📈', trend: 'down' },
+        { title: 'Efficiency Loss', stat: '-75%', description: 'of AI gains lost to approval bottleneck', source: 'BCG', icon: '📉', trend: 'down' },
+      ],
+      B: [
+        { title: 'Catch Rate', stat: '99.9%', description: 'of policy violations blocked autonomously', source: 'Anthropic', icon: '🛡️', trend: 'up' },
+        { title: 'Response Time', stat: '<10ms', description: 'to detect and block bad actions', source: 'NIST', icon: '⚡', trend: 'up' },
+        { title: 'Scale Factor', stat: '1000x', description: 'throughput vs human approval gates', source: 'Gartner', icon: '🚀', trend: 'up' },
+      ],
+    },
+  },
+  {
+    id: 5,
+    title: 'The Operating Model',
+    month: 'Month 12',
+    scenario: `You have a massive repository of clean, structured proprietary data from your AI efforts. How do you monetize it?`,
+    choices: {
+      A: [
+        'Keep selling the same services you always have, but use the data to deliver them cheaper and faster to improve margins.',
+        'Focus on efficiency: use your data advantage to reduce costs and undercut competitors on price.',
+        'Optimize existing operations: leverage data to streamline delivery and boost profit margins.',
+        'Double down on core services: use AI-powered efficiency to become the low-cost leader.',
+        'Pursue margin expansion: apply data insights to deliver faster, cheaper service delivery.',
+      ],
+      B: [
+        'Package your data and insights into a brand new "Intelligence-as-a-Service" subscription product for your clients.',
+        'Create a new revenue stream: productize your data into a subscription analytics offering.',
+        'Transform your business model: launch data products that generate recurring revenue.',
+        'Monetize your data moat: build subscription intelligence services for your client base.',
+        'Pivot to platform: convert your data advantage into a scalable SaaS product line.',
+      ],
+    },
+    scoring: {
+      A: { IV: 5, OR: -5, HR: 5, TV: 10 },
+      B: { IV: 25, OR: 15, HR: 20, TV: 35 },
+    },
+    insights: {
+      A: {
+        first: 'Clients are happy with faster service.',
+        second: 'It\'s a "race to the bottom." Competitors match your price cuts, and your margins compress again. You failed to evolve the business model.',
+        diagnosis: 'You chose incremental improvement over transformation.',
+        hiddenConnection: 'Cultural Fatigue',
+        outcome: 'Short-Term Pop / Long-Term Crash',
+      },
+      B: {
+        first: 'It\'s a hard pivot. Sales teams struggle to sell the new product initially.',
+        second: 'You create a recurring revenue stream with software-like margins (80%+) instead of service margins (20%). The company is re-rated as a Tech firm.',
+        diagnosis: 'You chose transformation over optimization.',
+        hiddenConnection: 'New Revenue Streams',
+        outcome: 'Market Re-Rating',
+      },
+    },
+    infographics: {
+      A: [
+        { title: 'Margin Compression', stat: '-15%', description: 'typical margin erosion in price wars', source: 'BCG', icon: '📉', trend: 'down' },
+        { title: 'Competitive Response', stat: '6mo', description: 'time for competitors to match efficiency gains', source: 'McKinsey', icon: '⏰', trend: 'neutral' },
+        { title: 'Growth Ceiling', stat: '5%', description: 'max organic growth in commoditized markets', source: 'Deloitte', icon: '🚧', trend: 'down' },
+      ],
+      B: [
+        { title: 'SaaS Margins', stat: '80%+', description: 'gross margins for data products', source: 'Goldman Sachs', icon: '💎', trend: 'up' },
+        { title: 'Revenue Multiple', stat: '8-12x', description: 'valuation multiple for recurring revenue', source: 'Morgan Stanley', icon: '📈', trend: 'up' },
+        { title: 'Market Re-Rating', stat: '+100%', description: 'typical valuation jump for platform pivots', source: 'BCG', icon: '🚀', trend: 'up' },
+      ],
+    },
+  },
+];
+
+// Keep LEVELS as an alias for backward compatibility (defaults to Set A)
+export const LEVELS = LEVELS_SET_A;
+
+export const TOTAL_LEVELS = LEVELS_SET_A.length;
 
 // Helper function to get a random variant index (0-4) for display variety
 export function getRandomVariantIndex(): number {
@@ -436,7 +719,8 @@ export function getScoreRange(key: ScoreKey): { min: number; max: number } {
 
 export const MONTH_MARKERS = [1, 4, 7, 10, 12] as const;
 
-export const CHOICE_INFOGRAPHICS: Record<number, { A: ChoiceInfographic; B: ChoiceInfographic }> = {
+// SET A Choice Infographics
+export const CHOICE_INFOGRAPHICS_SET_A: Record<number, { A: ChoiceInfographic; B: ChoiceInfographic }> = {
   1: {
     A: {
       headline: 'Technology-First Approach',
@@ -579,6 +863,153 @@ export const CHOICE_INFOGRAPHICS: Record<number, { A: ChoiceInfographic; B: Choi
   },
 };
 
+// SET B Choice Infographics
+export const CHOICE_INFOGRAPHICS_SET_B: Record<number, { A: ChoiceInfographic; B: ChoiceInfographic }> = {
+  1: {
+    A: {
+      headline: 'The Unicorn Hunt',
+      subheadline: 'External AI experts to fast-track capabilities',
+      keyStats: [
+        { value: '80%', label: 'Budget → Hiring', trend: 'neutral' },
+        { value: '67%', label: 'Turnover Risk', trend: 'down' },
+        { value: '72%', label: 'Rejection Rate', trend: 'down' },
+      ],
+      insight: 'External unicorns don\'t understand legacy business. Cultural rejection stalls the turnaround.',
+      leadershipQuality: 'Aggressive Recruiter',
+      qualityIcon: '🦄',
+      theme: 'tech',
+    },
+    B: {
+      headline: 'The Internal Academy',
+      subheadline: 'Upskill domain experts to build AI tools',
+      keyStats: [
+        { value: '80%', label: 'Budget → Training', trend: 'up' },
+        { value: '4.2x', label: 'Success Rate', trend: 'up' },
+        { value: '+45%', label: 'Retention', trend: 'up' },
+      ],
+      insight: 'Domain experts build tools that solve real problems. Retention soars, value compounds.',
+      leadershipQuality: 'Talent Developer',
+      qualityIcon: '🎓',
+      theme: 'people',
+    },
+  },
+  2: {
+    A: {
+      headline: 'Vector Search (RAG)',
+      subheadline: 'Fast keyword-based retrieval',
+      keyStats: [
+        { value: '73%', label: 'Accuracy Cap', trend: 'neutral' },
+        { value: '34%', label: 'False Positives', trend: 'down' },
+        { value: '-52%', label: 'Tool Trust', trend: 'down' },
+      ],
+      insight: 'Linear search misses nested rules. Auditors abandon the tool due to unreliability.',
+      leadershipQuality: 'Speed Optimizer',
+      qualityIcon: '⚡',
+      theme: 'tech',
+    },
+    B: {
+      headline: 'Knowledge Graph (Graph RAG)',
+      subheadline: 'Causal relationship mapping',
+      keyStats: [
+        { value: '98%+', label: 'Accuracy', trend: 'up' },
+        { value: '+40%', label: 'Value Recovery', trend: 'up' },
+        { value: '10x', label: 'Logic Depth', trend: 'up' },
+      ],
+      insight: 'Graph structure catches complex fraud patterns human auditors missed.',
+      leadershipQuality: 'Systems Architect',
+      qualityIcon: '🕸️',
+      theme: 'balance',
+    },
+  },
+  3: {
+    A: {
+      headline: 'The Integration Slog',
+      subheadline: '6-month API/RPA build',
+      keyStats: [
+        { value: '6-12mo', label: 'Timeline', trend: 'neutral' },
+        { value: '$25M+', label: 'Opportunity Cost', trend: 'down' },
+        { value: '-18%', label: 'Market Position', trend: 'down' },
+      ],
+      insight: 'By the time APIs are built, the market has moved. Half the turnaround burned on plumbing.',
+      leadershipQuality: 'Process Purist',
+      qualityIcon: '🔧',
+      theme: 'risk',
+    },
+    B: {
+      headline: 'Claude Computer Use',
+      subheadline: 'Visual AI agents for legacy systems',
+      keyStats: [
+        { value: '10x', label: 'Speed', trend: 'up' },
+        { value: '-60%', label: 'Cycle Time', trend: 'up' },
+        { value: 'High', label: 'Risk Level', trend: 'neutral' },
+      ],
+      insight: 'Incredible velocity bypassing integration. Requires robust governance to manage risk.',
+      leadershipQuality: 'Bold Innovator',
+      qualityIcon: '🖥️',
+      theme: 'growth',
+    },
+  },
+  4: {
+    A: {
+      headline: 'Human Air-Gap',
+      subheadline: 'Manual approval for all actions',
+      keyStats: [
+        { value: '50/hr', label: 'Max Throughput', trend: 'down' },
+        { value: '400%', label: 'Backlog Growth', trend: 'down' },
+        { value: '-75%', label: 'Efficiency Lost', trend: 'down' },
+      ],
+      insight: 'Human approval bottleneck wipes out AI efficiency gains. Queue explodes.',
+      leadershipQuality: 'Control Seeker',
+      qualityIcon: '🚫',
+      theme: 'risk',
+    },
+    B: {
+      headline: 'Supervisor Model',
+      subheadline: 'AI-on-AI governance at machine speed',
+      keyStats: [
+        { value: '99.9%', label: 'Catch Rate', trend: 'up' },
+        { value: '<10ms', label: 'Response', trend: 'up' },
+        { value: '1000x', label: 'Scale', trend: 'up' },
+      ],
+      insight: 'Supervisor AI catches bad actions at machine speed. Safe autonomy achieved.',
+      leadershipQuality: 'Governance Pioneer',
+      qualityIcon: '🛡️',
+      theme: 'balance',
+    },
+  },
+  5: {
+    A: {
+      headline: 'Service Efficiency',
+      subheadline: 'Same services, lower cost',
+      keyStats: [
+        { value: '-15%', label: 'Margin Erosion', trend: 'down' },
+        { value: '6mo', label: 'Competitor Match', trend: 'neutral' },
+        { value: '5%', label: 'Growth Cap', trend: 'down' },
+      ],
+      insight: 'Race to the bottom. Competitors match price cuts, margins compress again.',
+      leadershipQuality: 'Efficiency Expert',
+      qualityIcon: '📉',
+      theme: 'risk',
+    },
+    B: {
+      headline: 'Data Productization',
+      subheadline: 'Intelligence-as-a-Service subscription',
+      keyStats: [
+        { value: '80%+', label: 'SaaS Margins', trend: 'up' },
+        { value: '8-12x', label: 'Revenue Multiple', trend: 'up' },
+        { value: '+100%', label: 'Valuation Jump', trend: 'up' },
+      ],
+      insight: 'Recurring revenue with software margins. Company re-rated as a Tech firm.',
+      leadershipQuality: 'Platform Visionary',
+      qualityIcon: '🚀',
+      theme: 'growth',
+    },
+  },
+};
+
+// Keep CHOICE_INFOGRAPHICS as alias for backward compatibility
+export const CHOICE_INFOGRAPHICS = CHOICE_INFOGRAPHICS_SET_A;
+
 export const INITIAL_STOCK: StockState = {
   price: 100.00,
   history: [100.00],
@@ -586,7 +1017,8 @@ export const INITIAL_STOCK: StockState = {
   changePercent: 0,
 };
 
-export const TICKER_RESULTS: Record<number, { A: TickerResult; B: TickerResult }> = {
+// SET A Ticker Results
+export const TICKER_RESULTS_SET_A: Record<number, { A: TickerResult; B: TickerResult }> = {
   1: {
     A: {
       type: 'volatile',
@@ -659,6 +1091,83 @@ export const TICKER_RESULTS: Record<number, { A: TickerResult; B: TickerResult }
   },
 };
 
+// SET B Ticker Results (from PDF)
+export const TICKER_RESULTS_SET_B: Record<number, { A: TickerResult; B: TickerResult }> = {
+  1: {
+    A: {
+      type: 'volatile',
+      label: 'Volatile',
+      percent: 2.0,
+      analystNote: 'Star hires made headlines, but operational disconnect worries analysts.',
+    },
+    B: {
+      type: 'loss',
+      label: 'Dip',
+      percent: -1.5,
+      analystNote: 'Slow hiring pace concerns the Street, though retention metrics look strong.',
+    },
+  },
+  2: {
+    A: {
+      type: 'loss',
+      label: 'Drop',
+      percent: -4.5,
+      analystNote: 'Audit recovery numbers disappoint. Analysts cite "AI hallucinations" in compliance reports.',
+    },
+    B: {
+      type: 'gain',
+      label: 'Surge',
+      percent: 9.0,
+      analystNote: 'PBM Audit unit beats recovery targets by 40%. Proprietary "Graph AI" tech cited as key differentiator.',
+    },
+  },
+  3: {
+    A: {
+      type: 'volatile',
+      label: 'Flat',
+      percent: -0.5,
+      analystNote: 'Tech debt continues to drag on operational velocity. No new efficiencies priced in.',
+    },
+    B: {
+      type: 'gain',
+      label: 'Spike',
+      percent: 5.0,
+      analystNote: 'Analysts shocked by sudden drop in underwriting cycle time. Operational leverage unlocked.',
+    },
+  },
+  4: {
+    A: {
+      type: 'loss',
+      label: 'Drop',
+      percent: -6.0,
+      analystNote: 'Operational backlog reported. AI efficiency gains failing to materialize on P&L.',
+    },
+    B: {
+      type: 'gain',
+      label: 'Rally',
+      percent: 8.0,
+      analystNote: 'First successful deployment of "Self-Healing" enterprise AI reported. Competitive moat widening.',
+    },
+  },
+  5: {
+    A: {
+      type: 'volatile',
+      label: 'Flat',
+      percent: 1.0,
+      analystNote: 'Cost savings priced in. Analysts question long-term growth durability.',
+    },
+    B: {
+      type: 'gain',
+      label: 'The Moonshot',
+      percent: 12.0,
+      analystNote: 'Market re-rating company from "Service Provider" to "AI Platform". Target price doubled.',
+    },
+  },
+};
+
+// Keep TICKER_RESULTS as alias for backward compatibility
+export const TICKER_RESULTS = TICKER_RESULTS_SET_A;
+
 export function calculateStockState(choiceRecords: ChoiceRecord[]): StockState {
   let price = 100.00;
   const history = [100.00];
@@ -680,11 +1189,73 @@ export function calculateStockState(choiceRecords: ChoiceRecord[]): StockState {
   };
 }
 
-export function getTickerResult(levelId: number, choice: 'A' | 'B'): TickerResult {
-  return TICKER_RESULTS[levelId]?.[choice] || {
+export function getTickerResult(levelId: number, choice: 'A' | 'B', questionSet: QuestionSet = 'A'): TickerResult {
+  const tickerResults = getTickerResults(questionSet);
+  return tickerResults[levelId]?.[choice] || {
     type: 'volatile',
     label: 'Unknown',
     percent: 0,
     analystNote: 'No data available.',
   };
+}
+
+// ============================================
+// QUESTION SET HELPER FUNCTIONS
+// ============================================
+
+// Randomly select which question set to use for a game session
+export function selectRandomSet(): QuestionSet {
+  return Math.random() < 0.5 ? 'A' : 'B';
+}
+
+// Get levels for the specified question set
+export function getLevels(questionSet: QuestionSet): Level[] {
+  return questionSet === 'A' ? LEVELS_SET_A : LEVELS_SET_B;
+}
+
+// Get ticker results for the specified question set
+export function getTickerResults(questionSet: QuestionSet): Record<number, { A: TickerResult; B: TickerResult }> {
+  return questionSet === 'A' ? TICKER_RESULTS_SET_A : TICKER_RESULTS_SET_B;
+}
+
+// Get choice infographics for the specified question set
+export function getChoiceInfographics(questionSet: QuestionSet): Record<number, { A: ChoiceInfographic; B: ChoiceInfographic }> {
+  return questionSet === 'A' ? CHOICE_INFOGRAPHICS_SET_A : CHOICE_INFOGRAPHICS_SET_B;
+}
+
+// Calculate scores using the specified question set
+export function calculateScoresForSet(choices: ('A' | 'B')[], questionSet: QuestionSet): Scores {
+  const scores = { ...INITIAL_SCORES };
+  const levels = getLevels(questionSet);
+  
+  choices.forEach((choice, index) => {
+    const level = levels[index];
+    if (level) {
+      const scoreChange = level.scoring[choice];
+      scores.IV += scoreChange.IV;
+      scores.OR += scoreChange.OR;
+      scores.HR += scoreChange.HR;
+      scores.TV += scoreChange.TV;
+    }
+  });
+  
+  return scores;
+}
+
+// Generate variant indices for the specified question set
+export function generateVariantIndicesForSet(questionSet: QuestionSet): { A: number; B: number }[] {
+  const levels = getLevels(questionSet);
+  return levels.map(() => ({
+    A: getRandomVariantIndex(),
+    B: getRandomVariantIndex(),
+  }));
+}
+
+// Generate display order for the specified question set
+export function generateDisplayOrderForSet(questionSet: QuestionSet): ('A' | 'B')[][] {
+  const levels = getLevels(questionSet);
+  return levels.map(() => {
+    const shouldSwap = Math.random() < 0.5;
+    return shouldSwap ? ['B', 'A'] : ['A', 'B'];
+  });
 }

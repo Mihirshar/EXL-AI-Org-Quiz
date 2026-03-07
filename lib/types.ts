@@ -105,3 +105,6 @@ export interface ChoiceRecord {
   tickerResult: TickerResult;
   priceAfter: number;
 }
+
+// Question Set type - 'A' for original questions, 'B' for alternative questions
+export type QuestionSet = 'A' | 'B';
