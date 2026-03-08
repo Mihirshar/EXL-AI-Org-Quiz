@@ -42,9 +42,11 @@ export interface CurrentPlayer {
   selfArchetypeId?: string;
 }
 
+const DEFAULT_TICKERS = ['NOVA', 'APEX', 'FLUX', 'CORE', 'VNTX'];
+
 export function generateTickerSymbol(companyName: string): string {
   if (!companyName || companyName.trim().length === 0) {
-    return 'EXLS';
+    return DEFAULT_TICKERS[Math.floor(Math.random() * DEFAULT_TICKERS.length)];
   }
   
   const name = companyName.trim().toUpperCase();
